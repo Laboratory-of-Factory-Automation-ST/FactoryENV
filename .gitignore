@@ -1,0 +1,17 @@
+**/Debug/
+**/.settings/
+**/EWARM/settings
+**/EWARM/*/
+**/EWARM/*.dep
+**/MDK-ARM/DebugConfig
+**/MDK-ARM/RTE
+**/MDK-ARM/*/
+**/MDK-ARM/Packs_*.htm
+**/MDK-ARM/*.uvguix.*
+**/STM32CubeIDE/.settings
+**/*.launch
+**/Docs
+**/STM32CubeIDE/Debug/
+**/STM32CubeIDE/Release/
+**/STM32CubeIDE/Troubleshoot/
+*.chm

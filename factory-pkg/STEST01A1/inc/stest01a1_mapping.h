@@ -1,0 +1,38 @@
+/*
+ * stest01a1_mapping.h
+ *
+ *  Created on: Jan 6, 2025
+ *      Author: marek novotny
+ */
+
+#ifndef DRIVERS_BSP_STEST01A1_EVAL_INC_STEST01A1_MAPPING_H_
+#define DRIVERS_BSP_STEST01A1_EVAL_INC_STEST01A1_MAPPING_H_
+
+#include "nucleo_tim_driver.h"
+
+#define STEST01A1_IN_GPIO_Handle "PC7"
+#define STEST01A1_IN_GPIO_Port GPIOC
+#define STEST01A1_IN_GPIO_Pin GPIO_PIN_7
+
+#define STEST01A1_IPD_GPIO_Handle "PB6"
+#define STEST01A1_IPD_GPIO_Port GPIOB
+#define STEST01A1_IPD_GPIO_Pin GPIO_PIN_6
+
+#define STEST01A1_FLT1_GPIO_Handle "PB4"
+#define STEST01A1_FLT1_GPIO_Port GPIOB
+#define STEST01A1_FLT1_GPIO_Pin GPIO_PIN_4
+
+#define STEST01A1_FLT2_GPIO_Handle "PB10"
+#define STEST01A1_FLT2_GPIO_Port GPIOB
+#define STEST01A1_FLT2_GPIO_Pin GPIO_PIN_10
+
+#define STEST01A1_IN_TIMx TIM3
+#define STEST01A1_IN_CHx TIM_CHANNEL_2
+#define STEST01A1_IN_Handle &htim3
+
+#define STEST01A1_IPD_TIMx TIM4
+#define STEST01A1_IPD_CHx TIM_CHANNEL_1
+#define STEST01A1_IPD_Handle &htim4
+
+
+#endif /* DRIVERS_BSP_STEST01A1_EVAL_INC_STEST01A1_MAPPING_H_ */
