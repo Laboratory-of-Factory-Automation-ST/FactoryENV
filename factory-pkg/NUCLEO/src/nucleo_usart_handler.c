@@ -9,6 +9,7 @@
 
 #include "nucleo_usart_driver.h"
 #include "stest01a1_control_driver.h"
+#include "do41a1_control_driver.h"
 
 /* Exported vars -------------------------------------------------------------*/
 UART_HandleTypeDef * uart_handle = NULL;
@@ -51,6 +52,7 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
 		if (strcmp(raw, "clear") == 0) NUCLEO_USART_vCOM_Clear();
 //		else if (strncmp(raw, "fsm01m1.", 8) == 0) FSM01M1_CTRL_Handle(msg);
 		else if (strncmp(raw, "stest01a1.", 10) == 0) STEST01A1_CTRL_Handle(msg);
+		else if (strncmp(raw, "do41a1.", 7) == 0) DO41A1_CTRL_Handle(msg);
 		else NUCLEO_USART_vCOM_QuickWriteLine("Device not found");
 	}
 

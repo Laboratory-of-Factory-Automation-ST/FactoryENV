@@ -10,6 +10,9 @@
 
 #include "main.h"
 
+#define NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD		(5.0f)
+#define NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD	(21.6f)
+
 GPIO_TypeDef * NUCLEO_GPIO_GetPortHandle(char * GPIO_HandleString);
 uint16_t NUCLEO_GPIO_GetPinHandle(char * GPIO_HandleString);
 void NUCLEO_GPIO_ActivatePin(char * GPIO_HandleString);

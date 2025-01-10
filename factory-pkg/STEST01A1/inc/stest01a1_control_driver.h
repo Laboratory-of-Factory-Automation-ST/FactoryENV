@@ -33,13 +33,12 @@ extern "C" {
 
 
 /* Exported constants --------------------------------------------------------*/
-#define STEST01A1_ZERO_VOLTAGE_THRESHOLD		(5.0f)
-#define STEST01A1_NOMINAL_VOLTAGE_THRESHOLD	(21.6f)
+
 
 /* Exported functions --------------------------------------------------------*/
 void STEST01A1_CTRL_Handle(USART_MessageTypeDef * msg);
-void STEST01A1_OUT_ON();
-void STEST01A1_OUT_OFF();
+void STEST01A1_CTRL_OUT_ON();
+void STEST01A1_CTRL_OUT_OFF();
 void STEST01A1_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 #ifdef	 __cplusplus

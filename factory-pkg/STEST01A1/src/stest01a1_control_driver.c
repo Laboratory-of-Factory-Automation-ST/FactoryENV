@@ -25,6 +25,7 @@
 #include "nucleo_tim_driver.h"
 #include "nucleo_usart_driver.h"
 #include "stest01a1_mapping.h"
+#include "nucleo_gpio_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum CTRL_IO_t {
@@ -223,11 +224,11 @@ void STEST01A1_CTRL_list_actions() {
 void STEST01A1_CTRL_switch(CTRL_IOTypeDef dev, CTRL_ActionTypeDef act) {
 	switch (dev) {
 		case out:
-			if (act == on) STEST01A1_OUT_ON();
-			else STEST01A1_OUT_OFF();
+			if (act == on) STEST01A1_CTRL_OUT_ON();
+			else STEST01A1_CTRL_OUT_OFF();
 			break;
 		case all:
-			if (act == off) STEST01A1_OUT_OFF();
+			if (act == off) STEST01A1_CTRL_OUT_OFF();
 		default:
 			break;
 	}
@@ -242,9 +243,9 @@ void STEST01A1_CTRL_switch(CTRL_IOTypeDef dev, CTRL_ActionTypeDef act) {
 void STEST01A1_CTRL_single_pulse(CTRL_IOTypeDef dev, uint32_t duration) {
 	switch (dev) {
 		case out:
-			STEST01A1_OUT_ON();
+			STEST01A1_CTRL_OUT_ON();
 			HAL_Delay(duration);
-			STEST01A1_OUT_OFF();
+			STEST01A1_CTRL_OUT_OFF();
 			break;
 		default:
 			break;
@@ -339,8 +340,8 @@ void STEST01A1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt) {
 		else if (logic != -1) msg.AppendInt(logic, &msg);
 	}
 	else if (fmt == logical) {
-		if (reading >= STEST01A1_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr("(on)", &msg);
-		else if (reading <= STEST01A1_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr("(off)", &msg);
+		if (reading >= NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr("(on)", &msg);
+		else if (reading <= NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr("(off)", &msg);
 		else msg.AppendStr("(?)", &msg);
 	}
 

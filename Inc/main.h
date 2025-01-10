@@ -70,8 +70,16 @@ void MX_TIM2_Init(void);
 #define SPI_MISO_GPIO_Port GPIOA
 #define SPI_MOSI_Pin GPIO_PIN_7
 #define SPI_MOSI_GPIO_Port GPIOA
+#define DO41A1_IN4_Pin GPIO_PIN_10
+#define DO41A1_IN4_GPIO_Port GPIOB
 #define LD2_Pin GPIO_PIN_12
 #define LD2_GPIO_Port GPIOB
+#define DO41A1_IN1_Pin GPIO_PIN_7
+#define DO41A1_IN1_GPIO_Port GPIOC
+#define DO41A1_IN3_Pin GPIO_PIN_8
+#define DO41A1_IN3_GPIO_Port GPIOA
+#define DO41A1_IN2_Pin GPIO_PIN_9
+#define DO41A1_IN2_GPIO_Port GPIOA
 #define TMS_Pin GPIO_PIN_13
 #define TMS_GPIO_Port GPIOA
 #define TCK_Pin GPIO_PIN_14

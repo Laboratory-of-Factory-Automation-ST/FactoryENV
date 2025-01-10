@@ -1,8 +1,7 @@
-/* USER CODE BEGIN Header */
 /**
   ******************************************************************************
-  * @file    stm32f4xx_it.h
-  * @brief   This file contains the headers of the interrupt handlers.
+  * @file    do41a1_control_driver.h
+  * @brief   This file contains interfaces for control of X-NUCLEO-DO41A1 board.
   ******************************************************************************
   * @attention
   *
@@ -15,51 +14,44 @@
   *
   ******************************************************************************
   */
-/* USER CODE END Header */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef __STM32F4xx_IT_H
-#define __STM32F4xx_IT_H
+#ifndef FACTORY_PKG_DO41A1_INC_DO41A1_CONTROL_DRIVER_H_
+#define FACTORY_PKG_DO41A1_INC_DO41A1_CONTROL_DRIVER_H_
 
 #ifdef __cplusplus
- extern "C" {
+extern "C" {
 #endif
 
 /* Private includes ----------------------------------------------------------*/
-/* USER CODE BEGIN Includes */
-
-/* USER CODE END Includes */
+#include "nucleo_usart_driver.h"
 
 /* Exported types ------------------------------------------------------------*/
-/* USER CODE BEGIN ET */
-
-/* USER CODE END ET */
-
+typedef const unsigned int DO41A1_CTRL_IO;
+typedef struct DO41A1_IO {
+		DO41A1_CTRL_IO all,
+		out1,
+		out2,
+		out3,
+		out4,
+		outx,
+		status1,
+		status2,
+		status3,
+		status4;
+};
 /* Exported constants --------------------------------------------------------*/
-/* USER CODE BEGIN EC */
-
-/* USER CODE END EC */
-
+extern const struct DO41A1_IO do41a1_io;
 /* Exported macro ------------------------------------------------------------*/
-/* USER CODE BEGIN EM */
 
-/* USER CODE END EM */
-
-/* Exported functions prototypes ---------------------------------------------*/
-void SysTick_Handler(void);
-void EXTI1_IRQHandler(void);
-void EXTI9_5_IRQHandler(void);
-void TIM1_BRK_TIM9_IRQHandler(void);
-void TIM2_IRQHandler(void);
-void TIM3_IRQHandler(void);
-void USART2_IRQHandler(void);
-void EXTI15_10_IRQHandler(void);
-/* USER CODE BEGIN EFP */
-
-/* USER CODE END EFP */
+/* Exported functions --------------------------------------------------------*/
+void DO41A1_CTRL_Handle(USART_MessageTypeDef * msg);
+void DO41A1_CTRL_ActivateOutput(DO41A1_CTRL_IO out_ctrl);
+void DO41A1_CTRL_DeactivateOutput(DO41A1_CTRL_IO out_ctrl);
+void DO41A1_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 
 #ifdef __cplusplus
 }
 #endif
 
-#endif /* __STM32F4xx_IT_H */
+#endif
