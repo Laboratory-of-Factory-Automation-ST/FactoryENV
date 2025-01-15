@@ -31,6 +31,13 @@ extern "C" {
 /* Exported constants --------------------------------------------------------*/
 #define USART_MAX_MSG_LEN 255
 
+/* COM port parameters */
+#define NUCLEO_USART_BAUDRATE 		115200
+#define NUCLEO_USART_WORLDLENGTH 	UART_WORDLENGTH_8B
+#define NUCLEO_USART_STOPBITS 		UART_STOPBITS_1
+#define NUCLEO_USART_PARITY			UART_PARITY_NONE
+#define NUCLEO_USART_HWCONTROL		UART_HWCONTROL_NONE
+
 /* Exported types ------------------------------------------------------------*/
 typedef enum USART_MsgFlag_t {
 	idle,
@@ -54,14 +61,18 @@ typedef struct USART_Message_t {
 
 /* Exported vars -------------------------------------------------------------*/
 // TODO: Possible race condition hazard, think about more enclosed solution
-extern UART_HandleTypeDef * uart_handle;
-extern USART_MessageTypeDef * p_msg;
+extern UART_HandleTypeDef *uart_handle;
 extern char rx_buffer[USART_MAX_MSG_LEN];
 extern USART_MessageTypeDef msg;
 extern USART_MessageTypeDef cmd;
 
 /* Exported functions --------------------------------------------------------*/
+HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
+		DMA_HandleTypeDef *hdmarx, DMA_HandleTypeDef *hdmatx*/);
+void NUCLEO_USART_Process(UART_HandleTypeDef *huart);
+HAL_StatusTypeDef NUCLEO_USART_ReceiveCmd(USART_MessageTypeDef * msg);
 int NUCLEO_USART_vCOM_Config(UART_HandleTypeDef * huart);
+HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef* huart);
 USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage();
 void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * msg);
 void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * msg);

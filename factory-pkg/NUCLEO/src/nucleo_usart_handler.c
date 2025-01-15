@@ -6,19 +6,12 @@
  */
 
 #include <string.h>
-
-#include "nucleo_usart_driver.h"
+#include "nucleo_usart_handler.h"
 #include "stest01a1_control_driver.h"
 #include "do41a1_control_driver.h"
 
-/* Exported vars -------------------------------------------------------------*/
-UART_HandleTypeDef * uart_handle = NULL;
-USART_MessageTypeDef * p_msg = NULL;
-char rx_buffer[USART_MAX_MSG_LEN];
-USART_MessageTypeDef msg;
-USART_MessageTypeDef cmd;
-
 /**
+ * TODO deprecated function
  * @brief Scans for serial input
  * @param huart: uart handle
  * @retval None
@@ -38,7 +31,6 @@ void NUCLEO_USART_vCOM_Scan(UART_HandleTypeDef * huart) {
 
 	if (cmd.flag == idle) NUCLEO_USART_vCOM_ReadLine(&cmd);
 }
-
 
 /**
  * @brief Routes received message to correct board resolver
@@ -68,18 +60,18 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 	if (huart == uart_handle) {
-		p_msg->AppendStr(rx_buffer, p_msg);
+		cmd.AppendStr(rx_buffer, &cmd);
 		memset(rx_buffer, 0, USART_MAX_MSG_LEN);
 
-		switch (p_msg->flag) {
+		switch (cmd.flag) {
 			case write:
-				NUCLEO_USART_vCOM_Write(p_msg);
+				NUCLEO_USART_vCOM_Write(&cmd);
 				break;
 			case flush_write:
-				NUCLEO_USART_vCOM_FlushWriteLine(p_msg);
+				NUCLEO_USART_vCOM_FlushWriteLine(&cmd);
 				break;
 			case wait:
-				NUCLEO_USART_vCOM_Route(p_msg);
+				NUCLEO_USART_vCOM_Route(&cmd);
 				break;
 			case ready:
 				break;

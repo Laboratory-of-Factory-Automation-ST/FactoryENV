@@ -104,7 +104,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="factory-pkg/Components/adc120|factory-pkg/FSM01M1|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_alarm_template.c|Drivers/CMSIS/Core/Template|Drivers/BSP/STM32G4xx_Nucleo|Drivers/CMSIS/Device/ST/STM32G4xx|Drivers/CMSIS/Device/ST/STM32F4xx|Drivers/CMSIS/NN|factory-pkg/exclude|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_wakeup_template.c|Drivers/STM32G4xx_HAL_Driver|factory-pkg/templates|Drivers/CMSIS/DSP|Drivers/CMSIS/RTOS2|Drivers/CMSIS/Core_A|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
+						<entry excluding="factory-pkg/FSM01M1|factory-pkg/Components/adc120|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_alarm_template.c|Drivers/CMSIS/Core/Template|Drivers/BSP/STM32G4xx_Nucleo|Drivers/CMSIS/Device/ST/STM32G4xx|Drivers/CMSIS/Device/ST/STM32F4xx|Drivers/CMSIS/NN|factory-pkg/exclude|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_wakeup_template.c|Drivers/STM32G4xx_HAL_Driver|factory-pkg/templates|Drivers/CMSIS/DSP|Drivers/CMSIS/RTOS2|Drivers/CMSIS/Core_A|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c" flags="VALUE_WORKSPACE_PATH" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>
@@ -182,7 +182,7 @@
 						</toolChain>
 					</folderInfo>
 					<sourceEntries>
-						<entry excluding="factory-pkg/Components/adc120|factory-pkg/FSM01M1|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_alarm_template.c|Drivers/CMSIS/Core/Template|Drivers/BSP/STM32G4xx_Nucleo|Drivers/CMSIS/Device/ST/STM32G4xx|Drivers/CMSIS/Device/ST/STM32F4xx|Drivers/CMSIS/NN|factory-pkg/exclude|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_wakeup_template.c|Drivers/STM32G4xx_HAL_Driver|factory-pkg/templates|Drivers/CMSIS/DSP|Drivers/CMSIS/RTOS2|Drivers/CMSIS/Core_A|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
+						<entry excluding="factory-pkg/FSM01M1|factory-pkg/Components/adc120|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_alarm_template.c|Drivers/CMSIS/Core/Template|Drivers/BSP/STM32G4xx_Nucleo|Drivers/CMSIS/Device/ST/STM32G4xx|Drivers/CMSIS/Device/ST/STM32F4xx|Drivers/CMSIS/NN|factory-pkg/exclude|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_rtc_wakeup_template.c|Drivers/STM32G4xx_HAL_Driver|factory-pkg/templates|Drivers/CMSIS/DSP|Drivers/CMSIS/RTOS2|Drivers/CMSIS/Core_A|Drivers/STM32F4xx_HAL_Driver/Src/stm32f4xx_hal_timebase_tim_template.c" flags="VALUE_WORKSPACE_PATH|RESOLVED" kind="sourcePath" name=""/>
 					</sourceEntries>
 				</configuration>
 			</storageModule>

@@ -27,9 +27,96 @@
 /* Private constants ---------------------------------------------------------*/
 #define USART_COM_TIMEOUT 100
 
+/* Exported vars -------------------------------------------------------------*/
+UART_HandleTypeDef *uart_handle = NULL;
+char rx_buffer[USART_MAX_MSG_LEN];
+USART_MessageTypeDef msg;
+USART_MessageTypeDef cmd;
+
 /* Exported functions --------------------------------------------------------*/
 
 /**
+ * @brief	Nucleo UART state machine init
+ * @param 	huart	Pointer to an initialized virtual COM Handle
+ * @param
+ * @retval 	HAL status
+ */
+HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
+		DMA_HandleTypeDef *hdmarx, DMA_HandleTypeDef *hdmatx*/) {
+
+	HAL_StatusTypeDef status = HAL_OK;
+
+	if(huart == NULL) {
+		return HAL_ERROR;
+	}
+	else {
+
+		/* TODO is uart_handle needed? */
+		uart_handle = huart;
+//		hdma_rx = hdmarx;
+//		hdma_tx = hdmatx;
+
+		cmd = NUCLEO_USART_vCOM_CreateMessage();
+		msg = NUCLEO_USART_vCOM_CreateMessage();
+		msg.Reset(&msg);
+		msg.AppendStr("***** IPS EVALUATION DIAGNOSTIC TOOL *****\n", &msg);
+		msg.AppendStr("* Type 'help' for usage information", &msg);
+
+		status = NUCLEO_USART_vCOM_WriteLine(&msg);
+		if(status != HAL_OK) {
+			return status;
+		}
+//		status = NUCLEO_USART_vCOM_WriteChar('\n');
+		return status;
+	}
+}
+
+/**
+ * @brief	COM state machine process
+ * @param	huart	related UART peripheral
+ */
+void NUCLEO_USART_Process(UART_HandleTypeDef * huart) {
+	if(cmd.flag == idle) {
+		NUCLEO_USART_ReceiveCmd(&cmd);
+	}
+}
+
+/**
+ * @brief Reads a line of characters from virtual COM stream
+ * @param msg: message
+ * @retval HAL_StatusTypeDef
+ */
+HAL_StatusTypeDef NUCLEO_USART_ReceiveCmd(USART_MessageTypeDef * msg) {
+	msg->flag = wait;
+	return HAL_UARTEx_ReceiveToIdle_IT(uart_handle, (uint8_t *) rx_buffer, USART_MAX_MSG_LEN);
+}
+
+/**
+ * @brief	Resets COM port parameters to the default values
+ * @param	huart Pointer to an initialized virtual COM Handle
+ * @retval 	HAL status
+ */
+HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef* huart) {
+
+	HAL_StatusTypeDef status = HAL_OK;
+
+	if (huart == NULL) {
+		status = HAL_ERROR;
+	}
+	else {
+		huart->Init.BaudRate = NUCLEO_USART_BAUDRATE;
+		huart->Init.WordLength = NUCLEO_USART_WORLDLENGTH;
+		huart->Init.StopBits = NUCLEO_USART_STOPBITS;
+		huart->Init.Parity = NUCLEO_USART_PARITY;
+		huart->Init.HwFlowCtl = NUCLEO_USART_HWCONTROL;
+
+		status = HAL_UART_Init(huart);
+	}
+	return status;
+}
+
+/**
+ * TODO deprecated function
  * @brief Configuration of virtual COM
  * @param huart: initialized virtual COM Handle
  * @retval int
@@ -199,12 +286,14 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str) {
 }
 
 /**
+ * TODO deprecated function
  * @brief Reads line of characters from virtual COM stream
  * @param msg: message
  * @retval HAL_StatusTypeDef
+ *
  */
 HAL_StatusTypeDef NUCLEO_USART_vCOM_ReadLine(USART_MessageTypeDef * msg) {
 	if (msg->flag == idle) msg->flag = wait;
-	p_msg = msg;
+//	p_msg = msg;
 	return HAL_UARTEx_ReceiveToIdle_IT(uart_handle, (uint8_t *) rx_buffer, USART_MAX_MSG_LEN);
 }
