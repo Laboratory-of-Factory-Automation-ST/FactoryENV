@@ -28,6 +28,7 @@ void NUCLEO_USART_vCOM_Scan(UART_HandleTypeDef * huart) {
 		NUCLEO_USART_vCOM_Config(huart);
 		cmd = NUCLEO_USART_vCOM_CreateMessage();
 		msg = NUCLEO_USART_vCOM_CreateMessage();
+		NUCLEO_USART_vCOM_Clear();
 
 		msg.Reset(&msg);
 		msg.AppendStr("***** IPS EVALUATION DIAGNOSTIC TOOL *****\n", &msg);

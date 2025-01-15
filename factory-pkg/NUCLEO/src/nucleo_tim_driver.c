@@ -21,6 +21,9 @@
 
 #define MICROS 1000000
 
+uint32_t NUCLEO_TIM_PCLK1Freq();
+uint32_t NUCLEO_TIM_PCLK2Freq();
+
 /**
  * @brief Configures parameters of pulse generating timer
  * @param htim: configured PWM timer handle
@@ -33,8 +36,8 @@
  */
 HAL_StatusTypeDef NUCLEO_TIM_PeriodicPulse_Config(TIM_HandleTypeDef * htim, TIM_TypeDef * TIM, uint32_t Channel, uint32_t Time_Base, uint32_t Period_Ticks, uint32_t Pulse_Ticks) {
 	/* Clock section */
-	uint32_t PCLK1Freq = HAL_RCC_GetPCLK1Freq();
-	uint32_t PCLK2Freq = HAL_RCC_GetPCLK2Freq();
+	uint32_t PCLK1Freq = NUCLEO_TIM_PCLK1Freq();
+	uint32_t PCLK2Freq = NUCLEO_TIM_PCLK2Freq();
 	if (PCLK1Freq != PCLK2Freq) Error_Handler();
 	uint32_t BusFreq = PCLK1Freq;
 
@@ -48,6 +51,17 @@ HAL_StatusTypeDef NUCLEO_TIM_PeriodicPulse_Config(TIM_HandleTypeDef * htim, TIM_
 }
 
 /**
+ * @brief Configures parameters of timer for basic switching output
+ * @param htim: configured PWM timer handle
+ * @param TIM: timer struct
+ * @param Channel: timer channel
+ * @retval None
+ */
+void NUCLEO_TIM_SwitchConfig(TIM_HandleTypeDef * htim, TIM_TypeDef * TIM, uint32_t Channel) {
+	NUCLEO_TIM_PeriodicPulse_Config(htim, TIM, Channel, MICROS, MICROS, MICROS);
+}
+
+/**
  * @brief starts pulse generating timer
  * @param htim: timer handle
  * @param channel: timer channel
@@ -58,13 +72,24 @@ void NUCLEO_TIM_PeriodicPulse_Start(TIM_HandleTypeDef * htim, uint32_t channel) 
 }
 
 /**
- * @brief stops pulse generating timer
+ * @brief pauses pulse generating timer
+ * @param htim: timer handle
+ * @param channel: timer channel
+ * @retval None
+ */
+void NUCLEO_TIM_PeriodicPulse_Pause(TIM_HandleTypeDef * htim, uint32_t channel) {
+	HAL_TIM_PWM_Stop(htim, channel);
+}
+
+/**
+ * @brief pauses pulse generating timer
  * @param htim: timer handle
  * @param channel: timer channel
  * @retval None
  */
 void NUCLEO_TIM_PeriodicPulse_Stop(TIM_HandleTypeDef * htim, uint32_t channel) {
 	HAL_TIM_PWM_Stop(htim, channel);
+	HAL_TIM_Base_Stop(htim);
 }
 
 /**
@@ -103,4 +128,28 @@ void NUCLEO_TIM_RunPeriodicPulse_IT(TIM_HandleTypeDef * handle, TIM_TypeDef * tm
 void NUCLEO_TIM_PeriodicPulse_Stop_IT(TIM_HandleTypeDef * htim, uint32_t channel) {
 	HAL_TIM_PWM_Stop_IT(htim, channel);
 	HAL_TIM_Base_Stop_IT(htim);
+}
+
+/**
+ * @brief pauses pulse generating timer in interrupt mode
+ * @param htim: timer handle
+ * @param channel: timer channel
+ * @retval None
+ */
+void NUCLEO_TIM_PeriodicPulse_Pause_IT(TIM_HandleTypeDef * htim, uint32_t channel) {
+	HAL_TIM_PWM_Stop_IT(htim, channel);
+}
+
+uint32_t NUCLEO_TIM_PCLK1Freq() {
+	uint32_t pclk1 = HAL_RCC_GetPCLK1Freq();
+
+	if((RCC->CFGR & RCC_CFGR_PPRE1) == 0) return pclk1;
+	else return 2 * pclk1;
+}
+
+uint32_t NUCLEO_TIM_PCLK2Freq() {
+	uint32_t pclk2 = HAL_RCC_GetPCLK2Freq();
+
+	if((RCC->CFGR & RCC_CFGR_PPRE2) == 0) return pclk2;
+	else return 2 * pclk2;
 }

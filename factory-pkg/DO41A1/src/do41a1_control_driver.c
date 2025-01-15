@@ -64,10 +64,8 @@ _Bool DO41A1_STATUS4 = 0;
 static char * token_ctx;
 
 /* Private function prototypes -----------------------------------------------*/
-void DO41A1_CTRL_splash_msg();
 void DO41A1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt);
-void DO41A1_CTRL_reset_io();
-void DO41A1_CTRL_switch(CTRL_IOTypeDef dev, CTRL_ActionTypeDef act);
+void DO41A1_CTRL_reset_io(CTRL_IOTypeDef io);
 void DO41A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target);
 void DO41A1_CTRL_levels();
 void DO41A1_CTRL_states();
@@ -75,12 +73,12 @@ void DO41A1_CTRL_help();
 void DO41A1_CTRL_list_io();
 void DO41A1_CTRL_list_actions();
 void DO41A1_CTRL_single_pulse(CTRL_IOTypeDef dev, uint32_t duration);
-void DO41A1_CTRL_demag_stat();
-void DO41A1_CTRL_PWM_Config(CTRL_IOTypeDef io, char * cfg);
-void DO41A1_CTRL_PWM_Run(CTRL_IOTypeDef io);
+void DO41A1_CTRL_periodic_pulse(CTRL_IOTypeDef io);
 
 /* Exported constants --------------------------------------------------------*/
-const struct DO41A1_IO do41a1_io = {
+const struct DO41A1_IO * do41a1_io;
+
+const struct DO41A1_IO do41a1_io_def = {
 	all,
 	out1,
 	out2,
@@ -94,6 +92,25 @@ const struct DO41A1_IO do41a1_io = {
 };
 
 /* Exported functions --------------------------------------------------------*/
+
+/**
+ * @brief Intializes the board IO
+ * @param msg: message
+ * @retval None
+ */
+void DO41A1_CTRL_InitIO() {
+	DO41A1_CTRL_reset_io(outx);
+	do41a1_io = &do41a1_io_def;
+}
+
+/**
+ * @brief Deintializes the board IO
+ * @param msg: message
+ * @retval None
+ */
+void DO41A1_CTRL_DeinitIO() {
+	do41a1_io = NULL;
+}
 
 /**
  * @brief Handles messages routed to the board
@@ -125,24 +142,21 @@ void DO41A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
 	else if (strcmp(arg, "out2") == 0) DO41A1_CTRL_resolve(NULL, out2);
 	else if (strcmp(arg, "out3") == 0) DO41A1_CTRL_resolve(NULL, out3);
 	else if (strcmp(arg, "out4") == 0) DO41A1_CTRL_resolve(NULL, out4);
-	else if (strcmp(strchr(arg, '.') + 1, "pwm") == 0) DO41A1_CTRL_PWM_Config(target, arg);
-	else if (strcmp(strchr(arg, '.') + 1, "pwm.on") == 0) DO41A1_CTRL_PWM_Run(target);
+	else if (strcmp(arg, "outx") == 0) DO41A1_CTRL_resolve(NULL, outx);
+	else if (strcmp(arg, "pulse") == 0) DO41A1_CTRL_periodic_pulse(target);
 	else if (strcmp(arg, "status1") == 0) DO41A1_CTRL_resolve(NULL, status1);
 	else if (strcmp(arg, "status2") == 0) DO41A1_CTRL_resolve(NULL, status2);
 	else if (strcmp(arg, "status3") == 0) DO41A1_CTRL_resolve(NULL, status3);
 	else if (strcmp(arg, "status4") == 0) DO41A1_CTRL_resolve(NULL, status4);
-	else if (strcmp(arg, "on") == 0) DO41A1_CTRL_ActivateOutput(target);
+	else if (strcmp(arg, "activate") == 0) DO41A1_CTRL_ActivateOutput(target);
+	else if (strcmp(arg, "deactivate") == 0) DO41A1_CTRL_DeactivateOutput(target);
+	else if (strcmp(arg, "on") == 0) {
+		DO41A1_CTRL_reset_io(target);
+		DO41A1_CTRL_ActivateOutput(target);
+	}
 	else if (strcmp(arg, "off") == 0) DO41A1_CTRL_DeactivateOutput(target);
-	else if (strcmp(arg, "pulse") == 0) {
-//		DO41A1_PULSE_PulseGen_TIM_High(OUT_TMR);
-//		HAL_Delay(1000);
-//		DO41A1_PULSE_PulseGen_TIM_Low(OUT_TMR);
-	}
-	else if (strcmp(arg, "pwm") == 0) {
-//		NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN_Handle, DO41A1_IN_TIMx, DO41A1_IN_CHx, 1000, 500, 200);
-//		NUCLEO_TIM_PeriodicPulse_Start(DO41A1_IN_Handle, DO41A1_IN_CHx);
-	}
 	else if (strcmp(arg, "single") == 0) DO41A1_CTRL_single_pulse(target, 1000);
+	else if (strcmp(arg, "reset") == 0) DO41A1_CTRL_reset_io(target);
 	else if (strcmp(arg, "state") == 0) DO41A1_CTRL_read(target, logical);
 	else if (strcmp(arg, "level") == 0) DO41A1_CTRL_read(target, numerical);
 	else if (strcmp(arg, "levels") == 0) DO41A1_CTRL_levels();
@@ -253,16 +267,6 @@ void DO41A1_CTRL_list_actions() {
 }
 
 /**
- * @brief Provides IO switching services
- * @param io: IO
- * @param act: action
- * @retval None
- */
-void DO41A1_CTRL_switch(CTRL_IOTypeDef io, CTRL_ActionTypeDef act) {
-
-}
-
-/**
  * @brief Provides IO single pulse services
  * @param io: IO
  * @param act: action
@@ -280,12 +284,12 @@ void DO41A1_CTRL_single_pulse(CTRL_IOTypeDef io, uint32_t duration) {
  * @param cfg: configuration string
  * @retval None
  */
-void DO41A1_CTRL_PWM_Config(CTRL_IOTypeDef io, char * cfg) {
-	char * remainder = strtok(NULL, " ");
+void DO41A1_CTRL_periodic_pulse(CTRL_IOTypeDef io) {
 
-	char * tick = strtok(NULL, " ");
-	char * period = strtok(NULL, " ");
-	char * pulse = strtok(NULL, " ");
+	char * tick = strtok_r(NULL, " ", &token_ctx);
+	char * period = strtok_r(NULL, " ", &token_ctx);
+	char * pulse = strtok_r(NULL, " ", &token_ctx);
+	pulse[strcspn(pulse, "\r\n")] = '\0';
 
 	uint32_t tick_micros = atoi(tick);
 	uint32_t period_ticks = atoi(period);
@@ -309,30 +313,11 @@ void DO41A1_CTRL_PWM_Config(CTRL_IOTypeDef io, char * cfg) {
 		case out4:
 			NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN4_TIM_Handle, DO41A1_IN4_TIMx, DO41A1_IN4_CHx, tick_micros, period_ticks, pulse_ticks);
 			break;
-		default:
-			break;
-	}
-}
-
-/**
- * @brief Runs the configured PWM timer
- * @param io: IO
- * @retval None
- */
-void DO41A1_CTRL_PWM_Run(CTRL_IOTypeDef io) {
-
-	switch (io) {
-		case out1:
-			NUCLEO_TIM_PeriodicPulse_Start(DO41A1_IN1_TIM_Handle, DO41A1_IN1_CHx);
-			break;
-		case out2:
-			NUCLEO_TIM_PeriodicPulse_Start(DO41A1_IN2_TIM_Handle, DO41A1_IN1_CHx);
-			break;
-		case out3:
-			NUCLEO_TIM_PeriodicPulse_Start(DO41A1_IN3_TIM_Handle, DO41A1_IN1_CHx);
-			break;
-		case out4:
-			NUCLEO_TIM_PeriodicPulse_Start(DO41A1_IN4_TIM_Handle, DO41A1_IN1_CHx);
+		case outx:
+			NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN1_TIM_Handle, DO41A1_IN1_TIMx, DO41A1_IN1_CHx, tick_micros, period_ticks, pulse_ticks);
+			NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN2_TIM_Handle, DO41A1_IN2_TIMx, DO41A1_IN2_CHx, tick_micros, period_ticks, pulse_ticks);
+			NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN3_TIM_Handle, DO41A1_IN3_TIMx, DO41A1_IN3_CHx, tick_micros, period_ticks, pulse_ticks);
+			NUCLEO_TIM_PeriodicPulse_Config(DO41A1_IN4_TIM_Handle, DO41A1_IN4_TIMx, DO41A1_IN4_CHx, tick_micros, period_ticks, pulse_ticks);
 			break;
 		default:
 			break;
@@ -425,6 +410,11 @@ void DO41A1_CTRL_states() {
 		DO41A1_CTRL_read(i, logical);
 }
 
+/**
+ * @brief Activates output
+ * @param out_ctrl: output control
+ * @retval None
+ */
 void DO41A1_CTRL_ActivateOutput(DO41A1_CTRL_IO out_ctrl) {
 	switch (out_ctrl) {
 		case out1:
@@ -452,23 +442,28 @@ void DO41A1_CTRL_ActivateOutput(DO41A1_CTRL_IO out_ctrl) {
 	}
 }
 
+/**
+ * @brief Deactivates output
+ * @param out_ctrl: output control
+ * @retval None
+ */
 void DO41A1_CTRL_DeactivateOutput(DO41A1_CTRL_IO out_ctrl) {
 	switch (out_ctrl) {
 		case out1:
 			HAL_GPIO_WritePin(DO41A1_IN1_GPIO_Port, DO41A1_IN1_GPIO_Pin, GPIO_PIN_RESET);
-			NUCLEO_TIM_PeriodicPulse_Stop_IT(DO41A1_IN1_TIM_Handle, DO41A1_IN1_CHx);
+			NUCLEO_TIM_PeriodicPulse_Pause_IT(DO41A1_IN1_TIM_Handle, DO41A1_IN1_CHx);
 			break;
 		case out2:
 			HAL_GPIO_WritePin(DO41A1_IN2_GPIO_Port, DO41A1_IN2_GPIO_Pin, GPIO_PIN_RESET);
-			NUCLEO_TIM_PeriodicPulse_Stop_IT(DO41A1_IN2_TIM_Handle, DO41A1_IN2_CHx);
+			NUCLEO_TIM_PeriodicPulse_Pause_IT(DO41A1_IN2_TIM_Handle, DO41A1_IN2_CHx);
 			break;
 		case out3:
 			HAL_GPIO_WritePin(DO41A1_IN3_GPIO_Port, DO41A1_IN3_GPIO_Pin, GPIO_PIN_RESET);
-			NUCLEO_TIM_PeriodicPulse_Stop_IT(DO41A1_IN3_TIM_Handle, DO41A1_IN3_CHx);
+			NUCLEO_TIM_PeriodicPulse_Pause_IT(DO41A1_IN3_TIM_Handle, DO41A1_IN3_CHx);
 			break;
 		case out4:
 			HAL_GPIO_WritePin(DO41A1_IN4_GPIO_Port, DO41A1_IN4_GPIO_Pin, GPIO_PIN_RESET);
-			NUCLEO_TIM_PeriodicPulse_Stop_IT(DO41A1_IN4_TIM_Handle, DO41A1_IN4_CHx);
+			NUCLEO_TIM_PeriodicPulse_Pause_IT(DO41A1_IN4_TIM_Handle, DO41A1_IN4_CHx);
 			break;
 		case outx:
 			for (int out = out1; out <= out4; out += 1) DO41A1_CTRL_DeactivateOutput(out);
@@ -479,6 +474,42 @@ void DO41A1_CTRL_DeactivateOutput(DO41A1_CTRL_IO out_ctrl) {
 	}
 }
 
+/**
+ * @brief Resets IO to initial configuration and inactive state
+ * @retval None
+ */
+void DO41A1_CTRL_reset_io(CTRL_IOTypeDef io) {
+	switch (io) {
+		case out1:
+			DO41A1_CTRL_DeactivateOutput(out1);
+			NUCLEO_TIM_SwitchConfig(DO41A1_IN1_TIM_Handle, DO41A1_IN1_TIMx, DO41A1_IN1_CHx);
+			break;
+		case out2:
+			DO41A1_CTRL_DeactivateOutput(out2);
+			NUCLEO_TIM_SwitchConfig(DO41A1_IN2_TIM_Handle, DO41A1_IN2_TIMx, DO41A1_IN2_CHx);
+			break;
+		case out3:
+			DO41A1_CTRL_DeactivateOutput(out3);
+			NUCLEO_TIM_SwitchConfig(DO41A1_IN3_TIM_Handle, DO41A1_IN3_TIMx, DO41A1_IN3_CHx);
+			break;
+		case out4:
+			DO41A1_CTRL_DeactivateOutput(out4);
+			NUCLEO_TIM_SwitchConfig(DO41A1_IN4_TIM_Handle, DO41A1_IN4_TIMx, DO41A1_IN4_CHx);
+			break;
+		case outx:
+			DO41A1_CTRL_DeactivateOutput(outx);
+			for (int out = out1; out <= out4; out += 1) DO41A1_CTRL_reset_io(out);
+			break;
+		default:
+			// print informative message
+			break;
+	}
+}
+
+/**
+ * @brief Provides GPIO interrupt service
+ * @retval None
+ */
 void DO41A1_GPIO_EXTI_Callback(uint16_t GPIO_Pin) {
 	DO41A1_STATUS1 = 0;
 	DO41A1_STATUS2 = 0;
