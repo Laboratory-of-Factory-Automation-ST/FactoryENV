@@ -5,11 +5,14 @@
  *      Author: marek novotny
  */
 
-#ifndef DRIVERS_BSP_NUCLEO_INC_NUCLEO_USART_HANDLER_H_
-#define DRIVERS_BSP_NUCLEO_INC_NUCLEO_USART_HANDLER_H_
+#ifndef NUCLEO_USART_HANDLER_H_
+#define DNUCLEO_USART_HANDLER_H_
 
 #include "nucleo_usart_driver.h"
 
-void NUCLEO_USART_vCOM_Scan(UART_HandleTypeDef * huart);
+HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
+		DMA_HandleTypeDef *hdmarx, DMA_HandleTypeDef *hdmatx*/);
+HAL_StatusTypeDef NUCLEO_USART_Process(UART_HandleTypeDef *huart);
+HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 
-#endif /* DRIVERS_BSP_NUCLEO_INC_NUCLEO_USART_HANDLER_H_ */
+#endif /* NUCLEO_USART_HANDLER_H_ */
