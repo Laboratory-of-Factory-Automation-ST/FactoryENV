@@ -41,10 +41,12 @@ typedef struct DO41A1_IO {
 		status4;
 };
 /* Exported constants --------------------------------------------------------*/
-extern const struct DO41A1_IO do41a1_io;
+extern const struct DO41A1_IO * do41a1_io;
 /* Exported macro ------------------------------------------------------------*/
 
 /* Exported functions --------------------------------------------------------*/
+void DO41A1_CTRL_InitIO();
+void DO41A1_CTRL_DeinitIO();
 void DO41A1_CTRL_Handle(USART_MessageTypeDef * msg);
 void DO41A1_CTRL_ActivateOutput(DO41A1_CTRL_IO out_ctrl);
 void DO41A1_CTRL_DeactivateOutput(DO41A1_CTRL_IO out_ctrl);
