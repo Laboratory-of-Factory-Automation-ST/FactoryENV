@@ -37,15 +37,15 @@ HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 //		hdma_rx = hdmarx;
 //		hdma_tx = hdmatx;
 
-		cmd = NUCLEO_USART_vCOM_CreateMessage();
-		msg = NUCLEO_USART_vCOM_CreateMessage();
-		NUCLEO_USART_vCOM_Clear();
+		cmd = NUCLEO_USART_CreateMessage();
+		msg = NUCLEO_USART_CreateMessage();
+		NUCLEO_USART_ClearScreen();
 
 		msg.Reset(&msg);
 		msg.AppendStr(&msg, "***** IPS EVALUATION DIAGNOSTIC TOOL *****\n");
 		msg.AppendStr(&msg, "* Type 'help' for usage information");
 
-		status = NUCLEO_USART_vCOM_WriteLine(&msg);
+		status = NUCLEO_USART_WriteLine(&msg);
 
 		return status;
 	}
@@ -73,7 +73,7 @@ void NUCLEO_USART_Route(USART_MessageTypeDef * msg) {
 	char * raw = &(msg->data[0]);
 	if (raw[0] == '\r' || raw[0] == '\n') raw = raw + 1;
 	if (strlen(raw) > 0) {
-		if (strcmp(raw, "clear") == 0) NUCLEO_USART_vCOM_Clear();
+		if (strcmp(raw, "clear") == 0) NUCLEO_USART_ClearScreen();
 //		else if (strncmp(raw, "fsm01m1.", 8) == 0) FSM01M1_CTRL_Handle(msg);
 		else if (strncmp(raw, "stest01a1.", 10) == 0) STEST01A1_CTRL_Handle(msg);
 		else if (strncmp(raw, "do41a1.", 7) == 0) DO41A1_CTRL_Handle(msg);

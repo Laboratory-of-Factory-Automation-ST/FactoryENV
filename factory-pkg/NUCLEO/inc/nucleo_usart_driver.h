@@ -34,13 +34,6 @@ extern "C" {
 #define USART_MSG_MAX_LEN 	255
 #define USART_EOL_LEN		2
 
-/* COM port parameters */
-#define NUCLEO_USART_BAUDRATE 		115200
-#define NUCLEO_USART_WORLDLENGTH 	UART_WORDLENGTH_8B
-#define NUCLEO_USART_STOPBITS 		UART_STOPBITS_1
-#define NUCLEO_USART_PARITY			UART_PARITY_NONE
-#define NUCLEO_USART_HWCONTROL		UART_HWCONTROL_NONE
-
 /* Exported types ------------------------------------------------------------*/
 typedef enum USART_MsgFlag_t {
 	ready,
@@ -69,22 +62,20 @@ extern USART_MessageTypeDef msg;
 extern USART_MessageTypeDef cmd;
 
 /* Exported functions --------------------------------------------------------*/
-USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage();
-void NUCLEO_USART_vCOM_AppendInt(USART_MessageTypeDef * self, int i);
-void NUCLEO_USART_vCOM_AppendFloat(USART_MessageTypeDef * self, float f);
-void NUCLEO_USART_vCOM_AppendDouble(USART_MessageTypeDef * self, double d);
-void NUCLEO_USART_vCOM_AppendStr(USART_MessageTypeDef * self, char * str);
-void NUCLEO_USART_vCOM_Reset(USART_MessageTypeDef * self);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_Clear();
-HAL_StatusTypeDef NUCLEO_USART_vCOM_Write(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWrite(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWriteLine(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteChar(char c);
+USART_MessageTypeDef NUCLEO_USART_CreateMessage();
+void NUCLEO_USART_AppendInt(USART_MessageTypeDef * self, int i);
+void NUCLEO_USART_AppendFloat(USART_MessageTypeDef * self, float f);
+void NUCLEO_USART_AppendDouble(USART_MessageTypeDef * self, double d);
+void NUCLEO_USART_AppendStr(USART_MessageTypeDef * self, char * str);
+void NUCLEO_USART_Reset(USART_MessageTypeDef * self);
+HAL_StatusTypeDef NUCLEO_USART_ClearScreen();
+HAL_StatusTypeDef NUCLEO_USART_Write(USART_MessageTypeDef * msg);
+HAL_StatusTypeDef NUCLEO_USART_FlushWrite(USART_MessageTypeDef * msg);
+HAL_StatusTypeDef NUCLEO_USART_WriteChar(char c);
+HAL_StatusTypeDef NUCLEO_USART_WriteLine(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_WriteString(char *str);
 HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_Status();
+HAL_StatusTypeDef NUCLEO_USART_Status();
 HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 
 #ifdef	 __cplusplus

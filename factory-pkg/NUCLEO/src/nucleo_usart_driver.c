@@ -35,11 +35,11 @@
  * @brief Initializes new USART message
  * @retval USART_MessageTypeDef
  */
-USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage() {
-	USART_MessageTypeDef msg = {{0}, USART_MSG_MAX_LEN, ready, NUCLEO_USART_vCOM_AppendInt,
-			NUCLEO_USART_vCOM_AppendFloat,
-			NUCLEO_USART_vCOM_AppendStr,
-			NUCLEO_USART_vCOM_Reset
+USART_MessageTypeDef NUCLEO_USART_CreateMessage() {
+	USART_MessageTypeDef msg = {{0}, USART_MSG_MAX_LEN, ready, NUCLEO_USART_AppendInt,
+			NUCLEO_USART_AppendFloat,
+			NUCLEO_USART_AppendStr,
+			NUCLEO_USART_Reset
 	};
 	return msg;
 }
@@ -50,7 +50,7 @@ USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage() {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendInt(USART_MessageTypeDef * self, int i) {
+void NUCLEO_USART_AppendInt(USART_MessageTypeDef * self, int i) {
 	char iStr[USART_MSG_MAX_LEN/2];
 	int len = sprintf(iStr, "%d", i);
 
@@ -63,7 +63,7 @@ void NUCLEO_USART_vCOM_AppendInt(USART_MessageTypeDef * self, int i) {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendFloat(USART_MessageTypeDef * self, float f) {
+void NUCLEO_USART_AppendFloat(USART_MessageTypeDef * self, float f) {
 	char fStr[USART_MSG_MAX_LEN/2];
 	int len = sprintf(fStr, "%0.2f", (double) f);
 
@@ -76,7 +76,7 @@ void NUCLEO_USART_vCOM_AppendFloat(USART_MessageTypeDef * self, float f) {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendStr(USART_MessageTypeDef * self, char * str) {
+void NUCLEO_USART_AppendStr(USART_MessageTypeDef * self, char * str) {
 	int len = strlen(str);
 
 	strncat(self->data, str, len);
@@ -87,7 +87,7 @@ void NUCLEO_USART_vCOM_AppendStr(USART_MessageTypeDef * self, char * str) {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_Reset(USART_MessageTypeDef * self) {
+void NUCLEO_USART_Reset(USART_MessageTypeDef * self) {
 	memset(self->data, 0, USART_MSG_MAX_LEN);
 	/*TODO might reset also all other data items to default? */
 }
@@ -96,7 +96,7 @@ void NUCLEO_USART_vCOM_Reset(USART_MessageTypeDef * self) {
  * @brief Clears console contents
  * @retval HAL_StatusTypeDef
  */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_Clear() {
+HAL_StatusTypeDef NUCLEO_USART_ClearScreen() {
 	char * clr_str = "\x1b[2J\x1b[1;1H";
 	int len = strlen(clr_str);
 
@@ -109,7 +109,7 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_Clear() {
  * @param msg: message
  * @retval HAL_StatusTypeDef
  */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_Write(USART_MessageTypeDef * msg) {
+HAL_StatusTypeDef NUCLEO_USART_Write(USART_MessageTypeDef * msg) {
 	HAL_StatusTypeDef status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg->data, USART_MSG_MAX_LEN, USART_COM_TIMEOUT);
 	return status;
 }
@@ -119,7 +119,7 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_Write(USART_MessageTypeDef * msg) {
  * param msg: message
  * @retval HAL_StatusTypeDef
  */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg) {
+HAL_StatusTypeDef NUCLEO_USART_WriteLine(USART_MessageTypeDef * msg) {
 	char msg_ln[USART_MSG_MAX_LEN + USART_EOL_LEN];
 	memcpy(msg_ln, msg->data, USART_MSG_MAX_LEN);
 	strncat(msg_ln, "\n", USART_EOL_LEN);
@@ -129,45 +129,11 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg) {
 }
 
 /**
- * TODO Deprecated function - to be replaced with NUCLEO_USART_WriteStringLine
- * @brief Performs a quick write line to virtual COM stream
- * @param fmt_str: message content as formatted string
- * @retval HAL_StatusTypeDef
- */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str) {
-	USART_MessageTypeDef tmp = NUCLEO_USART_vCOM_CreateMessage();
-	tmp.AppendStr(fmt_str, &tmp);
-	NUCLEO_USART_vCOM_FlushWriteLine(&tmp);
-}
-
-/**
- * @brief Flush and write newline terminated message to virtual COM port stream
- * @param msg: message
- * @retval HAL_StatusTypeDef
- */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWriteLine(USART_MessageTypeDef * msg) {
-	if (msg->flag == wait) {
-		msg->flag = flush_write;
-		/* TODO Problematic: flag goes to flush_write, but nothing is transmitted */
-		return HAL_BUSY;
-	}
-
-	char msg_ln[USART_MSG_MAX_LEN + USART_EOL_LEN];
-	memcpy(msg_ln, msg->data, USART_MSG_MAX_LEN);
-	strncat(msg_ln, "\n", USART_EOL_LEN);
-
-	HAL_StatusTypeDef status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg_ln, USART_MSG_MAX_LEN, USART_COM_TIMEOUT);
-	msg->Reset(msg);
-
-	return status;
-}
-
-/**
  * @brief	Write single character to virtual COM port stream
  * @param	c: character
  * @retval	HAL_StatusTypeDef
  */
-HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteChar(char c) {
+HAL_StatusTypeDef NUCLEO_USART_WriteChar(char c) {
 	HAL_StatusTypeDef status = HAL_OK;
 	status = HAL_UART_Transmit(uart_handle, (uint8_t *) &c, 1, USART_COM_TIMEOUT);
 	return status;

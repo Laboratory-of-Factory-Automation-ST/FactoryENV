@@ -131,7 +131,7 @@ void STEST01A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
 	else {
 		msg.Reset(&msg);
 		msg.AppendStr(&msg, "Invalid command, no actions performed");
-		NUCLEO_USART_vCOM_WriteLine(&msg);
+		NUCLEO_USART_WriteLine(&msg);
 	}
 }
 
@@ -149,7 +149,7 @@ void STEST01A1_CTRL_help() {
 			"- Type 'actions' for action list\n"
 			"- Type 'clear' to clear text from terminal\n"
 			/*"- Use 'x' in device identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/);
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -175,7 +175,7 @@ void STEST01A1_CTRL_list_devices() {
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -212,7 +212,7 @@ void STEST01A1_CTRL_list_actions() {
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -271,7 +271,7 @@ void STEST01A1_CTRL_PWM_Config(char * cfg) {
 	uint32_t pulse_ticks = atoi(pulse);
 
 	if (pulse_ticks > period_ticks) {
-		NUCLEO_USART_vCOM_QuickWriteLine("Pulse cannot have longer duration than period");
+		NUCLEO_USART_WriteStringLine("Pulse cannot have longer duration than period");
 		return;
 	}
 
@@ -346,7 +346,7 @@ void STEST01A1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt) {
 	}
 
 	msg.AppendStr(&msg, "\n");
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -367,7 +367,7 @@ void STEST01A1_CTRL_demag_stat() {
 	msg.AppendStr(&msg, "Inductance: ");
 	msg.AppendFloat(&msg, inductance);
 	msg.AppendStr(&msg, " H");
-	NUCLEO_USART_vCOM_WriteLine(&msg);
+	NUCLEO_USART_WriteLine(&msg);
 	msg.Reset(&msg);
 	DEMAG_TICKS = 0;
 }
