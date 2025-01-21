@@ -8,7 +8,7 @@
 #ifndef NUCLEO_USART_HANDLER_H_
 #define NUCLEO_USART_HANDLER_H_
 
-#include "nucleo_usart_driver.h"
+#include "main.h"
 
 HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 		DMA_HandleTypeDef *hdmarx, DMA_HandleTypeDef *hdmatx*/);
