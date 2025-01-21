@@ -27,10 +27,7 @@
 
 
 /* Exported variables --------------------------------------------------------*/
-UART_HandleTypeDef *uart_handle = NULL;
-char rx_buffer[USART_MSG_MAX_LEN];
-USART_MessageTypeDef msg;
-USART_MessageTypeDef cmd;
+
 
 /* Exported functions --------------------------------------------------------*/
 
@@ -39,14 +36,13 @@ USART_MessageTypeDef cmd;
  * @param	huart Pointer to an initialized virtual COM Handle
  * @retval 	HAL status
  */
-HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef* huart) {
+HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef *huart) {
 
 	HAL_StatusTypeDef status = HAL_OK;
 
 	if (huart == NULL) {
 		status = HAL_ERROR;
-	}
-	else {
+	} else {
 		huart->Init.BaudRate = NUCLEO_USART_BAUDRATE;
 		huart->Init.WordLength = NUCLEO_USART_WORLDLENGTH;
 		huart->Init.StopBits = NUCLEO_USART_STOPBITS;
@@ -63,7 +59,7 @@ HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef* huart) {
  * @retval USART_MessageTypeDef
  */
 USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage() {
-	USART_MessageTypeDef msg = {{0}, USART_MSG_MAX_LEN, idle, NUCLEO_USART_vCOM_AppendInt,
+	USART_MessageTypeDef msg = {{0}, USART_MSG_MAX_LEN, ready, NUCLEO_USART_vCOM_AppendInt,
 			NUCLEO_USART_vCOM_AppendFloat,
 			NUCLEO_USART_vCOM_AppendStr,
 			NUCLEO_USART_vCOM_Reset
@@ -151,8 +147,7 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg) {
 	memcpy(msg_ln, msg->data, USART_MSG_MAX_LEN);
 	strncat(msg_ln, "\n", USART_EOL_LEN);
 
-	/* TODO Problematic (!): msg_len ?> USART_MAX_MSG_LEN */
-	HAL_StatusTypeDef status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg_ln, USART_MSG_MAX_LEN, USART_COM_TIMEOUT);
+	HAL_StatusTypeDef status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg_ln, (USART_MSG_MAX_LEN + USART_EOL_LEN), USART_COM_TIMEOUT);
 	return status;
 }
 
@@ -210,11 +205,11 @@ HAL_StatusTypeDef NUCLEO_USART_WriteString(char *str) {
 	HAL_StatusTypeDef status = HAL_OK;
 	int len = strlen(str);
 
-	if(len > USART_MSG_MAX_LEN) {
+	if (len > USART_MSG_MAX_LEN) {
 		status = HAL_ERROR;
-	}
-	else {
-		status = HAL_UART_Transmit(uart_handle, (uint8_t *) str, len, USART_COM_TIMEOUT);
+	} else {
+		status = HAL_UART_Transmit(uart_handle, (uint8_t *) str, len,
+				USART_COM_TIMEOUT);
 	}
 	return status;
 }
@@ -229,12 +224,11 @@ HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str) {
 	char str2send[USART_MSG_MAX_LEN];
 	int len = strlen(str);
 
-	if(len < (USART_MSG_MAX_LEN - USART_EOL_LEN)) {
+	if (len < (USART_MSG_MAX_LEN - USART_EOL_LEN)) {
 		memcpy(str2send, str, USART_MSG_MAX_LEN);
 		strncat(str2send, "\n", USART_EOL_LEN);
 		status = NUCLEO_USART_WriteString(str2send);
-	}
-	else {
+	} else {
 		status = HAL_ERROR;
 	}
 	return status;
@@ -251,4 +245,20 @@ HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str) {
 //	NUCLEO_USART_vCOM_FlushWrite(&tmp);
 //}
 
+/**
+ * @brief Reads a line of characters from virtual COM stream
+ * @param msg: message
+ * @retval HAL_StatusTypeDef
+ */
+HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg) {
+	HAL_StatusTypeDef status = HAL_OK;
+
+	if (msg->flag == ready) {
+		status = HAL_UARTEx_ReceiveToIdle_IT(uart_handle, (uint8_t*) rx_buffer,
+				USART_MSG_MAX_LEN);
+	} else {
+		status = HAL_BUSY;
+	}
+	return status;
+}
 

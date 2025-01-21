@@ -22,7 +22,7 @@
 
 /* Private includes ----------------------------------------------------------*/
 /* USER CODE BEGIN Includes */
-#include "nucleo_usart_driver.h"
+#include "nucleo_usart_handler.h"
 /* USER CODE END Includes */
 
 /* Private typedef -----------------------------------------------------------*/
@@ -101,13 +101,13 @@ int main(void)
   NUCLEO_USART_ProcessInit(&huart2);
   /* USER CODE END 2 */
 
+  /* USER CODE BEGIN WHILE */
   /* Application process loop */
   while (1) {
-	  /* USER CODE BEGIN WHILE */
 	  NUCLEO_USART_Process(&huart2);
 //  MX_ips_switch_Process();
-	  /* USER CODE END WHILE */
   }
+  /* USER CODE END WHILE */
 
   /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */

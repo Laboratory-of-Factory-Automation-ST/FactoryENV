@@ -10,6 +10,12 @@
 #include "stest01a1_control_driver.h"
 #include "do41a1_control_driver.h"
 
+/* Exported variables --------------------------------------------------------*/
+UART_HandleTypeDef *uart_handle = NULL;
+char rx_buffer[USART_MSG_MAX_LEN];
+USART_MessageTypeDef msg;
+USART_MessageTypeDef cmd;
+
 /**
  * @brief	Nucleo UART state machine init
  * @param 	huart	Pointer to an initialized virtual COM Handle
@@ -40,10 +46,7 @@ HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 		msg.AppendStr("* Type 'help' for usage information", &msg);
 
 		status = NUCLEO_USART_vCOM_WriteLine(&msg);
-		if(status != HAL_OK) {
-			return status;
-		}
-//		status = NUCLEO_USART_vCOM_WriteChar('\n');
+
 		return status;
 	}
 }
@@ -56,24 +59,9 @@ HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 HAL_StatusTypeDef NUCLEO_USART_Process(UART_HandleTypeDef * huart) {
 	HAL_StatusTypeDef status = HAL_OK;
 
-	if(cmd.flag == idle) {
-		status = NUCLEO_USART_ReadLine(&cmd);
-	} else {
-		status = HAL_BUSY;
-	}
-	return status;
-}
+	status = NUCLEO_USART_ReadLine(&cmd);
 
-/**
- * @brief Reads a line of characters from virtual COM stream
- * @param msg: message
- * @retval HAL_StatusTypeDef
- */
-HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg) {
-	/* TODO if needed? */
-//	if (msg->flag == idle) msg->flag = wait;
-	msg->flag = wait;
-	return HAL_UARTEx_ReceiveToIdle_IT(uart_handle, (uint8_t *) rx_buffer, USART_MSG_MAX_LEN);
+	return status;
 }
 
 /**
@@ -93,7 +81,7 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
 	}
 
 	msg->Reset(msg);
-	msg->flag = idle;
+	msg->flag = ready;
 }
 
 /**

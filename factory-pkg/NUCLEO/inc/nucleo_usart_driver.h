@@ -18,6 +18,7 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
+/* TODO follow naming convention (ref. template.h) */
 #ifndef NUCLEO_USART_DRIVER_H_
 #define NUCLEO_USART_DRIVER_H_
 
@@ -42,7 +43,6 @@ extern "C" {
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum USART_MsgFlag_t {
-	idle,
 	ready,
 	wait,
 	write,
@@ -87,6 +87,7 @@ HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str);
 //HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWrite(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_Status();
+HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 
 #ifdef	 __cplusplus
 }
