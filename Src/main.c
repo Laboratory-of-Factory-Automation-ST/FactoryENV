@@ -83,14 +83,12 @@ int main(void)
   HAL_Init();
 
   /* USER CODE BEGIN Init */
-
   /* USER CODE END Init */
 
   /* Configure the system clock */
   SystemClock_Config();
 
   /* USER CODE BEGIN SysInit */
-
   /* USER CODE END SysInit */
 
   /* Initialize all configured peripherals */
@@ -98,20 +96,20 @@ int main(void)
   MX_USART2_UART_Init();
   MX_TIM1_Init();
   MX_ips_switch_Init();
-  /* USER CODE BEGIN 2 */
 
+  /* USER CODE BEGIN 2 */
+  NUCLEO_USART_ProcessInit(&huart2);
   /* USER CODE END 2 */
 
-  /* Infinite loop */
   /* USER CODE BEGIN WHILE */
-  while (1)
-  {
-	  NUCLEO_USART_vCOM_Scan(&huart2);
-    /* USER CODE END WHILE */
-
-  MX_ips_switch_Process();
-    /* USER CODE BEGIN 3 */
+  /* Application process loop */
+  while (1) {
+	  NUCLEO_USART_Process(&huart2);
+//  MX_ips_switch_Process();
   }
+  /* USER CODE END WHILE */
+
+  /* USER CODE BEGIN 3 */
   /* USER CODE END 3 */
 }
 

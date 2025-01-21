@@ -6,40 +6,65 @@
  */
 
 #include <string.h>
-
+#include "nucleo_usart_handler.h"
 #include "nucleo_usart_driver.h"
 #include "stest01a1_control_driver.h"
 #include "do41a1_control_driver.h"
 
-/* Exported vars -------------------------------------------------------------*/
-UART_HandleTypeDef * uart_handle = NULL;
-USART_MessageTypeDef * p_msg = NULL;
-char rx_buffer[USART_MAX_MSG_LEN];
+/* Exported variables --------------------------------------------------------*/
+UART_HandleTypeDef *uart_handle = NULL;
+char rx_buffer[USART_MSG_MAX_LEN];
 USART_MessageTypeDef msg;
 USART_MessageTypeDef cmd;
 
 /**
- * @brief Scans for serial input
- * @param huart: uart handle
- * @retval None
+ * @brief	Nucleo UART state machine init
+ * @param 	huart	Pointer to an initialized virtual COM Handle
+ * @retval 	HAL status
  */
-void NUCLEO_USART_vCOM_Scan(UART_HandleTypeDef * huart) {
-	if (uart_handle == NULL) {
-		NUCLEO_USART_vCOM_Config(huart);
+HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
+		DMA_HandleTypeDef *hdmarx, DMA_HandleTypeDef *hdmatx*/) {
+
+	HAL_StatusTypeDef status = HAL_OK;
+
+	if(huart == NULL) {
+		return HAL_ERROR;
+	}
+	else {
+
+		/* TODO is uart_handle needed? */
+		uart_handle = huart;
+//		hdma_rx = hdmarx;
+//		hdma_tx = hdmatx;
+
 		cmd = NUCLEO_USART_vCOM_CreateMessage();
 		msg = NUCLEO_USART_vCOM_CreateMessage();
 		NUCLEO_USART_vCOM_Clear();
 
+		NUCLEO_USART_vCOM_Clear();
+
 		msg.Reset(&msg);
 		msg.AppendStr("***** IPS EVALUATION DIAGNOSTIC TOOL *****\n", &msg);
-		msg.AppendStr("* Type help for usage information", &msg);
-		NUCLEO_USART_vCOM_WriteLine(&msg);
-		NUCLEO_USART_vCOM_WriteChar('\n');
-	}
+		msg.AppendStr("* Type 'help' for usage information", &msg);
 
-	if (cmd.flag == idle) NUCLEO_USART_vCOM_ReadLine(&cmd);
+		status = NUCLEO_USART_vCOM_WriteLine(&msg);
+
+		return status;
+	}
 }
 
+/**
+ * @brief	COM state machine process
+ * @param	huart	related UART peripheral
+ * @retval	HAL status
+ */
+HAL_StatusTypeDef NUCLEO_USART_Process(UART_HandleTypeDef * huart) {
+	HAL_StatusTypeDef status = HAL_OK;
+
+	status = NUCLEO_USART_ReadLine(&cmd);
+
+	return status;
+}
 
 /**
  * @brief Routes received message to correct board resolver
@@ -54,11 +79,11 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
 //		else if (strncmp(raw, "fsm01m1.", 8) == 0) FSM01M1_CTRL_Handle(msg);
 		else if (strncmp(raw, "stest01a1.", 10) == 0) STEST01A1_CTRL_Handle(msg);
 		else if (strncmp(raw, "do41a1.", 7) == 0) DO41A1_CTRL_Handle(msg);
-		else NUCLEO_USART_vCOM_QuickWriteLine("Device not found");
+		else NUCLEO_USART_WriteStringLine("Device not found");
 	}
 
 	msg->Reset(msg);
-	msg->flag = idle;
+	msg->flag = ready;
 }
 
 /**
@@ -69,23 +94,27 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
  */
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 	if (huart == uart_handle) {
-		p_msg->AppendStr(rx_buffer, p_msg);
-		memset(rx_buffer, 0, USART_MAX_MSG_LEN);
+		cmd.Reset(&cmd);
+		cmd.AppendStr(rx_buffer, &cmd);
+		memset(rx_buffer, 0, USART_MSG_MAX_LEN);
 
-		switch (p_msg->flag) {
+		NUCLEO_USART_vCOM_Route(&cmd);
+
+/* TODO consolidate state machine: to be related to resource (USART) instead of Message  */
+/*		switch (cmd.flag) {
 			case write:
-				NUCLEO_USART_vCOM_Write(p_msg);
+				NUCLEO_USART_vCOM_Write(&cmd);
 				break;
 			case flush_write:
-				NUCLEO_USART_vCOM_FlushWriteLine(p_msg);
+				NUCLEO_USART_vCOM_FlushWriteLine(&cmd);
 				break;
 			case wait:
-				NUCLEO_USART_vCOM_Route(p_msg);
+				NUCLEO_USART_vCOM_Route(&cmd);
 				break;
 			case ready:
 				break;
 			default:
 				break;
-		}
+		}*/
 	}
 }

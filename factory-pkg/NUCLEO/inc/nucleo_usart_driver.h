@@ -18,8 +18,9 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef BSP_NUCLEO_INC_NUCLEO_USART_DRIVER_H_
-#define BSP_NUCLEO_INC_NUCLEO_USART_DRIVER_H_
+/* TODO follow naming convention (ref. template.h) */
+#ifndef NUCLEO_USART_DRIVER_H_
+#define NUCLEO_USART_DRIVER_H_
 
 #ifdef __cplusplus
 extern "C" {
@@ -29,11 +30,19 @@ extern "C" {
 #include "main.h"
 
 /* Exported constants --------------------------------------------------------*/
-#define USART_MAX_MSG_LEN 255
+#define USART_COM_TIMEOUT 	100
+#define USART_MSG_MAX_LEN 	255
+#define USART_EOL_LEN		2
+
+/* COM port parameters */
+#define NUCLEO_USART_BAUDRATE 		115200
+#define NUCLEO_USART_WORLDLENGTH 	UART_WORDLENGTH_8B
+#define NUCLEO_USART_STOPBITS 		UART_STOPBITS_1
+#define NUCLEO_USART_PARITY			UART_PARITY_NONE
+#define NUCLEO_USART_HWCONTROL		UART_HWCONTROL_NONE
 
 /* Exported types ------------------------------------------------------------*/
 typedef enum USART_MsgFlag_t {
-	idle,
 	ready,
 	wait,
 	write,
@@ -41,7 +50,7 @@ typedef enum USART_MsgFlag_t {
 } USART_MsgFlagTypeDef;
 
 typedef struct USART_Message_t {
-	char data[USART_MAX_MSG_LEN];
+	char data[USART_MSG_MAX_LEN];
 	int length;
 	USART_MsgFlagTypeDef flag;
 
@@ -54,14 +63,12 @@ typedef struct USART_Message_t {
 
 /* Exported vars -------------------------------------------------------------*/
 // TODO: Possible race condition hazard, think about more enclosed solution
-extern UART_HandleTypeDef * uart_handle;
-extern USART_MessageTypeDef * p_msg;
-extern char rx_buffer[USART_MAX_MSG_LEN];
+extern UART_HandleTypeDef *uart_handle;
+extern char rx_buffer[USART_MSG_MAX_LEN];
 extern USART_MessageTypeDef msg;
 extern USART_MessageTypeDef cmd;
 
 /* Exported functions --------------------------------------------------------*/
-int NUCLEO_USART_vCOM_Config(UART_HandleTypeDef * huart);
 USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage();
 void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * msg);
 void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * msg);
@@ -73,15 +80,16 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_Write(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWrite(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWriteLine(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_ReadLine(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteChar(char c);
-HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWrite(char * fmt_str);
+HAL_StatusTypeDef NUCLEO_USART_WriteString(char *str);
+HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str);
+//HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWrite(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_Status();
-void NUCLEO_USART_vCOM_Scan(UART_HandleTypeDef * huart);
+HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 
 #ifdef	 __cplusplus
 }
 #endif
 
-#endif /* BSP_NUCLEO_INC_NUCLEO_USART_DRIVER_H_ */
+#endif /* NUCLEO_USART_DRIVER_H_ */
