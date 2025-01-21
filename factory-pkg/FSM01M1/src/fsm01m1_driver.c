@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_eval_control_driver.c
+  * @file    fsm01m1_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for interactive board control and measurement
@@ -18,9 +18,8 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <fsm01m1_eval_control_driver.h>
-#include <fsm01m1_eval_driver.h>
-#include <fsm01m1_eval_pulse_driver.h>
+#include <fsm01m1_driver.h>
+#include <fsm01m1_pulse_driver.h>
 #include <stdlib.h>
 #include <string.h>
 
@@ -143,7 +142,7 @@ void FSM01M1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
 	}
 	else {
 		msg.Reset(&msg);
-		msg.AppendStr("Invalid command, no actions performed", &msg);
+		msg.AppendStr(&msg, "Invalid command, no actions performed");
 		NUCLEO_USART_vCOM_WriteLine(&msg);
 	}
 }
@@ -156,12 +155,12 @@ void FSM01M1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
  */
 void FSM01M1_CTRL_help() {
 	msg.Reset(&msg);
-	msg.AppendStr("[function] [action] - applies action to a function\n"
+	msg.AppendStr(&msg, "[function] [action] - applies action to a function\n"
 			"[global_action] - applies action to all functions\n"
 			"- Type 'functions' for function list\n"
 			"- Type 'actions' for action list\n"
 			"- Type 'clear' to clear text from terminal\n"
-			/*"- Use 'x' in device identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/, &msg);
+			/*"- Use 'x' in device identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/);
 	NUCLEO_USART_vCOM_Write(&msg);
 }
 
@@ -174,49 +173,49 @@ void FSM01M1_CTRL_list_devices() {
 	for (int i = vcc; i <= tp2; i += 1) {
 		switch (i) {
 			case vcc:
-				msg.AppendStr("vcc\n", &msg);
+				msg.AppendStr(&msg, "vcc\n");
 				break;
 			case vcc1:
-				msg.AppendStr("vcc1\n", &msg);
+				msg.AppendStr(&msg, "vcc1\n");
 				break;
 			case vcc1_dsc:
-				msg.AppendStr("vcc1_dsc\n", &msg);
+				msg.AppendStr(&msg, "vcc1_dsc\n");
 				break;
 			case vcc2:
-				msg.AppendStr("vcc2\n", &msg);
+				msg.AppendStr(&msg, "vcc2\n");
 				break;
 			case vcc2_dsc:
-				msg.AppendStr("vcc2_dsc\n", &msg);
+				msg.AppendStr(&msg, "vcc2_dsc\n");
 				break;
 			case in1:
-				msg.AppendStr("in1\n", &msg);
+				msg.AppendStr(&msg, "in1\n");
 				break;
 			case in2:
-				msg.AppendStr("in2\n", &msg);
+				msg.AppendStr(&msg, "in2\n");
 				break;
 			case out1:
-				msg.AppendStr("out1\n", &msg);
+				msg.AppendStr(&msg, "out1\n");
 				break;
 			case out1_dsc:
-				msg.AppendStr("out1_dsc\n", &msg);
+				msg.AppendStr(&msg, "out1_dsc\n");
 				break;
 			case out2:
-				msg.AppendStr("out2\n", &msg);
+				msg.AppendStr(&msg, "out2\n");
 				break;
 			case out2_dsc:
-				msg.AppendStr("out2_dsc\n", &msg);
+				msg.AppendStr(&msg, "out2_dsc\n");
 				break;
 			case coff1:
-				msg.AppendStr("coff1\n", &msg);
+				msg.AppendStr(&msg, "coff1\n");
 				break;
 			case coff2:
-				msg.AppendStr("coff2\n", &msg);
+				msg.AppendStr(&msg, "coff2\n");
 				break;
 			case tp1:
-				msg.AppendStr("tp1\n", &msg);
+				msg.AppendStr(&msg, "tp1\n");
 				break;
 			case tp2:
-				msg.AppendStr("tp2\n", &msg);
+				msg.AppendStr(&msg, "tp2\n");
 				break;
 			default:
 				break;
@@ -235,24 +234,24 @@ void FSM01M1_CTRL_list_actions() {
 	for (int i = on; i <= levels; i += 1) {
 		switch (i) {
 			case on:
-				msg.AppendStr("on\n", &msg);
+				msg.AppendStr(&msg, "on\n");
 				break;
 			case off:
-				msg.AppendStr("off\n", &msg);
-				msg.AppendStr("off [global]\n", &msg);
+				msg.AppendStr(&msg, "off\n");
+				msg.AppendStr(&msg, "off [global]\n");
 				break;
 			case state:
-				msg.AppendStr("state - returns if function is on or off\n", &msg);
+				msg.AppendStr(&msg, "state - returns if function is on or off\n");
 				break;
 			case states:
-				msg.AppendStr("states [global]\n", &msg);
+				msg.AppendStr(&msg, "states [global]\n");
 				break;
 			case level:
-				msg.AppendStr("level - returns numeric representation of function state"
-						"(integer 1 and 0 denote logical state, decimals denote physical state)\n", &msg);
+				msg.AppendStr(&msg, "level - returns numeric representation of function state"
+						"(integer 1 and 0 denote logical state, decimals denote physical state)\n");
 				break;
 			case levels:
-				msg.AppendStr("levels [global]\n", &msg);
+				msg.AppendStr(&msg, "levels [global]\n");
 				break;
 			default:
 				break;
@@ -357,79 +356,79 @@ void FSM01M1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt) {
 	switch (dev) {
 		case vcc:
 			reading = FSM01M1_ADC120_read_single_node(&hspi2, VCC_ADC_CHANNEL_ID);
-			msg.AppendStr("VCC \t\t = ", &msg);
+			msg.AppendStr(&msg, "VCC \t\t = ");
 			break;
 		case vcc1:
 			reading = FSM01M1_ADC120_read_single_node(&hspi2, VCC1_ADC_CHANNEL_ID);
-			msg.AppendStr("VCC1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "VCC1 \t\t = ");
 			break;
 		case vcc1_dsc:
 			logic = (int) HAL_GPIO_ReadPin(VCC1_DSC_GPIO_Port, VCC1_DSC_Pin);
-			msg.AppendStr("VCC1_DSC \t = ", &msg);
+			msg.AppendStr(&msg, "VCC1_DSC \t = ");
 			break;
 		case vcc2:
 			reading = FSM01M1_ADC120_read_single_node(&hspi2, VCC2_ADC_CHANNEL_ID);
-			msg.AppendStr("VCC2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "VCC2 \t\t = ");
 			break;
 		case vcc2_dsc:
 			logic = (int) HAL_GPIO_ReadPin(VCC2_DSC_GPIO_Port, VCC2_DSC_Pin);
-			msg.AppendStr("VCC2_DSC \t = ", &msg);
+			msg.AppendStr(&msg, "VCC2_DSC \t = ");
 			break;
 		case in1:
 			logic = (int) HAL_GPIO_ReadPin(OUTP1_GPIO_Port, OUTP1_Pin);
-			msg.AppendStr("IN1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "IN1 \t\t = ");
 			break;
 		case in2:
 			logic = (int) HAL_GPIO_ReadPin(OUTP2_GPIO_Port, OUTP2_Pin);
-			msg.AppendStr("IN2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "IN2 \t\t = ");
 			break;
 		case out1:
 			reading = FSM01M1_ADC120_read_single_node(&hspi2, OUT1_ADC_CHANNEL_ID);
-			msg.AppendStr("OUT1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT1 \t\t = ");
 			break;
 		case out1_dsc:
 			logic = (int) HAL_GPIO_ReadPin(OUT1_DSC_GPIO_Port, OUT1_DSC_Pin);
-			msg.AppendStr("OUT1_DSC \t = ", &msg);
+			msg.AppendStr(&msg, "OUT1_DSC \t = ");
 			break;
 		case out2:
 			reading = FSM01M1_ADC120_read_single_node(&hspi2, OUT2_ADC_CHANNEL_ID);
-			msg.AppendStr("OUT2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT2 \t\t = ");
 			break;
 		case out2_dsc:
 			logic = (int) HAL_GPIO_ReadPin(OUT2_DSC_GPIO_Port, OUT2_DSC_Pin);
-			msg.AppendStr("OUT2_DSC \t = ", &msg);
+			msg.AppendStr(&msg, "OUT2_DSC \t = ");
 			break;
 		case coff1:
 			logic = (int) HAL_GPIO_ReadPin(COFF1_CTRL_GPIO_Port, COFF1_CTRL_Pin) == GPIO_PIN_RESET;
-			msg.AppendStr("COFF1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "COFF1 \t\t = ");
 			break;
 		case coff2:
 			logic = (int) HAL_GPIO_ReadPin(COFF2_CTRL_GPIO_Port, COFF2_CTRL_Pin) == GPIO_PIN_RESET;
-			msg.AppendStr("COFF2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "COFF2 \t\t = ");
 			break;
 		case tp1:
 			logic = (int) HAL_GPIO_ReadPin(TP1_CTRL_GPIO_Port, TP1_CTRL_Pin) == GPIO_PIN_RESET;
-			msg.AppendStr("TP1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "TP1 \t\t = ");
 			break;
 		case tp2:
 			logic = (int) HAL_GPIO_ReadPin(TP2_CTRL_GPIO_Port, TP2_CTRL_Pin) == GPIO_PIN_RESET;
-			msg.AppendStr("TP2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "TP2 \t\t = ");
 			break;
 		default:
 			break;
 	}
 
 	if (fmt == numerical) {
-		if (reading != -1.0f) msg.AppendFloat(reading, &msg);
-		else if (logic != -1) msg.AppendInt(logic, &msg);
+		if (reading != -1.0f) msg.AppendFloat(&msg, reading);
+		else if (logic != -1) msg.AppendInt(&msg, logic);
 	}
 	else if (fmt == logical) {
-		if (reading >= FSM01M1_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr("(on)", &msg);
-		else if (reading <= FSM01M1_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr("(off)", &msg);
-		else msg.AppendStr("(?)", &msg);
+		if (reading >= FSM01M1_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr(&msg, "(on)");
+		else if (reading <= FSM01M1_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr(&msg, "(off)");
+		else msg.AppendStr(&msg, "(?)");
 	}
 
-	msg.AppendStr("\n", &msg);
+	msg.AppendStr(&msg, "\n");
 	NUCLEO_USART_vCOM_Write(&msg);
 }
 

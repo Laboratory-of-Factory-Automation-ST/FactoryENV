@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    stest01a1_eval_control_driver.c
+  * @file    stest01a1_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for interactive board control and measurement
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -21,10 +21,10 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include "stest01a1_control_driver.h"
+#include "stest01a1_driver.h"
+#include "stest01a1_mapping.h"
 #include "nucleo_tim_driver.h"
 #include "nucleo_usart_driver.h"
-#include "stest01a1_mapping.h"
 #include "nucleo_gpio_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/

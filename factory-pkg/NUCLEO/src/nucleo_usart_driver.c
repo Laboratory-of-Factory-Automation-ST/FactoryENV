@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -210,17 +210,6 @@ HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str) {
 	}
 	return status;
 }
-/**
- * TODO is this function needed?
- * @brief Performs a quick write to virtual COM stream
- * @param fmt_str: message content as formatted string
- * @retval HAL_StatusTypeDef
- */
-//HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWrite(char * fmt_str) {
-//	USART_MessageTypeDef tmp = NUCLEO_USART_vCOM_CreateMessage();
-//	tmp.AppendStr(fmt_str, &tmp);
-//	NUCLEO_USART_vCOM_FlushWrite(&tmp);
-//}
 
 /**
  * @brief Reads a line of characters from virtual COM stream

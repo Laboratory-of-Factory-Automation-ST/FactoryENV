@@ -5,8 +5,8 @@
  *      Author: marek novotny
  */
 
-#ifndef __NUCLEO_USART_HANDLER_H
-#define __NUCLEO_USART_HANDLER_H
+#ifndef __NUCLEO_USART_PROCESS_H
+#define __NUCLEO_USART_PROCESS_H
 
 #include "main.h"
 
@@ -15,4 +15,4 @@ HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 HAL_StatusTypeDef NUCLEO_USART_Process(UART_HandleTypeDef *huart);
 
 
-#endif /* NUCLEO_USART_HANDLER_H_ */
+#endif /* __NUCLEO_USART_PROCESS_H */

@@ -1,16 +1,16 @@
 /**
  ******************************************************************************
- * @file    fsm01m1_eval_tests.h
+ * @file    fsm01m1_tests.h
  * @author  ST Power Application Lab Prague
  * @version V1.0.0
- * @date    Jan 1, 2023
+ * @date    Jan 1, 2025
  * @brief   PCB test routines and procedures
  ******************************************************************************
  */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef FSM01M1_EVAL_TESTS_H_
-#define FSM01M1_EVAL_TESTS_H_
+#ifndef __FSM01M1_TESTS_H
+#define __FSM01M1_TESTS_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -42,6 +42,6 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 }
 #endif
 
-#endif /* FSM01M1_EVAL_TESTS_H_ */
+#endif /* __FSM01M1_TESTS_H */
 
 

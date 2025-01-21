@@ -1,11 +1,11 @@
 /**
   ******************************************************************************
-  * @file    do41a1_control_driver.h
+  * @file    do41a1_driver.h
   * @brief   This file contains interfaces for control of X-NUCLEO-DO41A1 board.
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2024 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -16,8 +16,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef FACTORY_PKG_DO41A1_INC_DO41A1_CONTROL_DRIVER_H_
-#define FACTORY_PKG_DO41A1_INC_DO41A1_CONTROL_DRIVER_H_
+#ifndef __DO41A1_DRIVER_H
+#define __DO41A1_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -56,4 +56,4 @@ void DO41A1_GPIO_EXTI_Callback(uint16_t GPIO_Pin);
 }
 #endif
 
-#endif
+#endif /* __DO41A1_DRIVER_H */

@@ -1,19 +1,19 @@
 /**
  ******************************************************************************
- * @file    fsm01m1_eval_tests.c
+ * @file    fsm01m1_tests.c
  * @author  ST Power Application Lab Prague
  * @version V1.0.0
- * @date    Jan 1, 2023
+ * @date    Jan 1, 2025
  * @brief   PCB test routines and procedures
  ******************************************************************************
  */
 
 
 /* Includes ------------------------------------------------------------------*/
-#include <fsm01m1_eval_driver.h>
-#include <fsm01m1_eval_tests.h>
+#include <fsm01m1_driver.h>
+#include <fsm01m1_tests.h>
 
-#include "../../FSM01M1/Inc/fsm01m1_eval_driver.h"
+#include "../../FSM01M1/Inc/fsm01m1_driver.h"
 
 #include "../../NUCLEO/inc/nucleo_usart_driver.h"
 /* Private types -------------------------------------------------------------*/

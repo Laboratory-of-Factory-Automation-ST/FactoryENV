@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_eval_driver.c
+  * @file    fsm01m1_legacy_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for programmable board control and measurement
@@ -18,10 +18,9 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../FSM01M1/Inc/fsm01m1_eval_pulse_driver.h"
-#include <fsm01m1_eval_driver.h>
-#include <fsm01m1_eval_pulse_driver.h>
-
+#include "../../FSM01M1/Inc/fsm01m1_pulse_driver.h"
+#include <fsm01m1_driver.h>
+#include <fsm01m1_pulse_driver.h>
 
 /* Private variables ---------------------------------------------------------*/
 extern SPI_HandleTypeDef hspi2;

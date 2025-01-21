@@ -1,15 +1,15 @@
 /*
- * nucleo_usart_handler.c
+ * nucleo_usart_process.c
  *
  *  Created on: Jan 3, 2025
  *      Author: marek novotny
  */
 
 #include <string.h>
-#include "nucleo_usart_handler.h"
+#include "nucleo_usart_process.h"
 #include "nucleo_usart_driver.h"
-#include "stest01a1_control_driver.h"
-#include "do41a1_control_driver.h"
+#include <do41a1_driver.h>
+#include <stest01a1_driver.h>
 
 /* Exported variables --------------------------------------------------------*/
 UART_HandleTypeDef *uart_handle = NULL;

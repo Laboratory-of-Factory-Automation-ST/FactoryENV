@@ -55,10 +55,10 @@ typedef struct USART_Message_t {
 	USART_MsgFlagTypeDef flag;
 
 	// aliases to common functions
-	void (* AppendInt)(struct USART_Message_t * msg, int i);
-	void (* AppendFloat)(struct USART_Message_t * msg, float f);
-	void (* AppendStr)(struct USART_Message_t * msg, char * str);
-	void (* Reset)(struct USART_Message_t * msg);
+	void (* AppendInt)(struct USART_Message_t * self, int i);
+	void (* AppendFloat)(struct USART_Message_t * self, float f);
+	void (* AppendStr)(struct USART_Message_t * self, char * str);
+	void (* Reset)(struct USART_Message_t * self);
 } USART_MessageTypeDef;
 
 /* Exported vars -------------------------------------------------------------*/
@@ -83,7 +83,6 @@ HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteLine(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_WriteChar(char c);
 HAL_StatusTypeDef NUCLEO_USART_WriteString(char *str);
 HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str);
-//HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWrite(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_QuickWriteLine(char * fmt_str);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_Status();
 HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);

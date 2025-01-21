@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_eval_pulse_driver.c
+  * @file    fsm01m1_pulse_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for programmable pulse generation
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 
-#include <fsm01m1_eval_driver.h>
-#include <fsm01m1_eval_pulse_driver.h>
+#include <fsm01m1_driver.h>
+#include <fsm01m1_pulse_driver.h>
 
 #define MICROS 1000000
 

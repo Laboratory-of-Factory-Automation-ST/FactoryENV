@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    do41a1_control_driver.c
+  * @file    do41a1_driver.c
   * @brief   This file implements interfaces for control of
   *			 X-NUCLEO-DO41A1 board.
   ******************************************************************************
@@ -20,9 +20,9 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include "do41a1_control_driver.h"
-#include "nucleo_tim_driver.h"
+#include "do41a1_driver.h"
 #include "do41a1_mapping.h"
+#include "nucleo_tim_driver.h"
 #include "nucleo_gpio_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/
