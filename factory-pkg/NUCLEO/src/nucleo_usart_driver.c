@@ -32,29 +32,6 @@
 /* Exported functions --------------------------------------------------------*/
 
 /**
- * @brief	Resets COM port parameters to the default values
- * @param	huart Pointer to an initialized virtual COM Handle
- * @retval 	HAL status
- */
-HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef *huart) {
-
-	HAL_StatusTypeDef status = HAL_OK;
-
-	if (huart == NULL) {
-		status = HAL_ERROR;
-	} else {
-		huart->Init.BaudRate = NUCLEO_USART_BAUDRATE;
-		huart->Init.WordLength = NUCLEO_USART_WORLDLENGTH;
-		huart->Init.StopBits = NUCLEO_USART_STOPBITS;
-		huart->Init.Parity = NUCLEO_USART_PARITY;
-		huart->Init.HwFlowCtl = NUCLEO_USART_HWCONTROL;
-
-		status = HAL_UART_Init(huart);
-	}
-	return status;
-}
-
-/**
  * @brief Initializes new USART message
  * @retval USART_MessageTypeDef
  */

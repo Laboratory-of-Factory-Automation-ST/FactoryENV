@@ -69,7 +69,6 @@ extern USART_MessageTypeDef msg;
 extern USART_MessageTypeDef cmd;
 
 /* Exported functions --------------------------------------------------------*/
-HAL_StatusTypeDef NUCLEO_USART_ResetParams(UART_HandleTypeDef* huart);
 USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage();
 void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * msg);
 void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * msg);
