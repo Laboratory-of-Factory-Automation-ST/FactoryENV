@@ -50,7 +50,7 @@ USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage() {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * self) {
+void NUCLEO_USART_vCOM_AppendInt(USART_MessageTypeDef * self, int i) {
 	char iStr[USART_MSG_MAX_LEN/2];
 	int len = sprintf(iStr, "%d", i);
 
@@ -63,7 +63,7 @@ void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * self) {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * self) {
+void NUCLEO_USART_vCOM_AppendFloat(USART_MessageTypeDef * self, float f) {
 	char fStr[USART_MSG_MAX_LEN/2];
 	int len = sprintf(fStr, "%0.2f", (double) f);
 
@@ -76,7 +76,7 @@ void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * self) {
  * @param msg: message
  * @retval None
  */
-void NUCLEO_USART_vCOM_AppendStr(char * str, USART_MessageTypeDef * self) {
+void NUCLEO_USART_vCOM_AppendStr(USART_MessageTypeDef * self, char * str) {
 	int len = strlen(str);
 
 	strncat(self->data, str, len);

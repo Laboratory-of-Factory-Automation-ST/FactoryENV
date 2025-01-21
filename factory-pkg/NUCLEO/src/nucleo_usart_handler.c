@@ -41,11 +41,9 @@ HAL_StatusTypeDef NUCLEO_USART_ProcessInit(UART_HandleTypeDef *huart/*,
 		msg = NUCLEO_USART_vCOM_CreateMessage();
 		NUCLEO_USART_vCOM_Clear();
 
-		NUCLEO_USART_vCOM_Clear();
-
 		msg.Reset(&msg);
-		msg.AppendStr("***** IPS EVALUATION DIAGNOSTIC TOOL *****\n", &msg);
-		msg.AppendStr("* Type 'help' for usage information", &msg);
+		msg.AppendStr(&msg, "***** IPS EVALUATION DIAGNOSTIC TOOL *****\n");
+		msg.AppendStr(&msg, "* Type 'help' for usage information");
 
 		status = NUCLEO_USART_vCOM_WriteLine(&msg);
 
@@ -71,7 +69,7 @@ HAL_StatusTypeDef NUCLEO_USART_Process(UART_HandleTypeDef * huart) {
  * @param msg: command message
  * @retval None
  */
-void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
+void NUCLEO_USART_Route(USART_MessageTypeDef * msg) {
 	char * raw = &(msg->data[0]);
 	if (raw[0] == '\r' || raw[0] == '\n') raw = raw + 1;
 	if (strlen(raw) > 0) {
@@ -95,10 +93,10 @@ void NUCLEO_USART_vCOM_Route(USART_MessageTypeDef * msg) {
 void HAL_UARTEx_RxEventCallback(UART_HandleTypeDef *huart, uint16_t Size) {
 	if (huart == uart_handle) {
 		cmd.Reset(&cmd);
-		cmd.AppendStr(rx_buffer, &cmd);
+		cmd.AppendStr(&cmd, rx_buffer);
 		memset(rx_buffer, 0, USART_MSG_MAX_LEN);
 
-		NUCLEO_USART_vCOM_Route(&cmd);
+		NUCLEO_USART_Route(&cmd);
 
 /* TODO consolidate state machine: to be related to resource (USART) instead of Message  */
 /*		switch (cmd.flag) {

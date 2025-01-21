@@ -19,8 +19,8 @@
 
 /* Define to prevent recursive inclusion -------------------------------------*/
 /* TODO follow naming convention (ref. template.h) */
-#ifndef NUCLEO_USART_DRIVER_H_
-#define NUCLEO_USART_DRIVER_H_
+#ifndef __NUCLEO_USART_DRIVER_H
+#define __NUCLEO_USART_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -55,9 +55,9 @@ typedef struct USART_Message_t {
 	USART_MsgFlagTypeDef flag;
 
 	// aliases to common functions
-	void (* AppendInt)(int i, struct USART_Message_t * msg);
-	void (* AppendFloat)(float f, struct USART_Message_t * msg);
-	void (* AppendStr)(char * str, struct USART_Message_t * msg);
+	void (* AppendInt)(struct USART_Message_t * msg, int i);
+	void (* AppendFloat)(struct USART_Message_t * msg, float f);
+	void (* AppendStr)(struct USART_Message_t * msg, char * str);
 	void (* Reset)(struct USART_Message_t * msg);
 } USART_MessageTypeDef;
 
@@ -70,11 +70,11 @@ extern USART_MessageTypeDef cmd;
 
 /* Exported functions --------------------------------------------------------*/
 USART_MessageTypeDef NUCLEO_USART_vCOM_CreateMessage();
-void NUCLEO_USART_vCOM_AppendInt(int i, USART_MessageTypeDef * msg);
-void NUCLEO_USART_vCOM_AppendFloat(float f, USART_MessageTypeDef * msg);
-void NUCLEO_USART_vCOM_AppendDouble(double d, USART_MessageTypeDef * m);
-void NUCLEO_USART_vCOM_AppendStr(char * str, USART_MessageTypeDef * msg);
-void NUCLEO_USART_vCOM_Reset(USART_MessageTypeDef * msg);
+void NUCLEO_USART_vCOM_AppendInt(USART_MessageTypeDef * self, int i);
+void NUCLEO_USART_vCOM_AppendFloat(USART_MessageTypeDef * self, float f);
+void NUCLEO_USART_vCOM_AppendDouble(USART_MessageTypeDef * self, double d);
+void NUCLEO_USART_vCOM_AppendStr(USART_MessageTypeDef * self, char * str);
+void NUCLEO_USART_vCOM_Reset(USART_MessageTypeDef * self);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_Clear();
 HAL_StatusTypeDef NUCLEO_USART_vCOM_Write(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_vCOM_FlushWrite(USART_MessageTypeDef * msg);
@@ -92,4 +92,4 @@ HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 }
 #endif
 
-#endif /* NUCLEO_USART_DRIVER_H_ */
+#endif /* __NUCLEO_USART_DRIVER_H */

@@ -5,8 +5,8 @@
  *      Author: marek novotny
  */
 
-#ifndef NUCLEO_USART_HANDLER_H_
-#define NUCLEO_USART_HANDLER_H_
+#ifndef __NUCLEO_USART_HANDLER_H
+#define __NUCLEO_USART_HANDLER_H
 
 #include "main.h"
 
