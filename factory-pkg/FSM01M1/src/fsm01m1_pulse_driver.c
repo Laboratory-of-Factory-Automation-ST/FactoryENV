@@ -17,7 +17,8 @@
   ******************************************************************************
   */
 
-#include <fsm01m1_driver.h>
+//#include <fsm01m1_driver.h>
+#include <fsm01m1_base_driver.h>
 #include <fsm01m1_pulse_driver.h>
 
 #define MICROS 1000000

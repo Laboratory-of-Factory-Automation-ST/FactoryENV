@@ -10,12 +10,11 @@
 
 
 /* Includes ------------------------------------------------------------------*/
-#include <fsm01m1_driver.h>
-#include <fsm01m1_tests.h>
-
-#include "../../FSM01M1/Inc/fsm01m1_driver.h"
-
-#include "../../NUCLEO/inc/nucleo_usart_driver.h"
+/* TODO 'include' structure to be verified */
+#include "fsm01m1_tests.h"
+#include "fsm01m1_base_driver.h"
+//#include "fsm01m1_driver.h"
+#include "nucleo_usart_driver.h"
 /* Private types -------------------------------------------------------------*/
 
 /* Private variables ---------------------------------------------------------*/
@@ -402,7 +401,7 @@ void FSM01M1_TEST_PROC_check_expected_voltages(bool * vcc, bool * vcc1, bool * o
 void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bool vcc2, bool out2) {
 	FSM01M1_TEST_PROC_check_expected_voltages(&vcc, &vcc1, &out1, &vcc2, &out2);
 
-	USART_MessageTypeDef msg = NUCLEO_USART_vCOM_CreateMessage();
+	USART_MessageTypeDef msg = NUCLEO_USART_CreateMessage();
 
 	bool result = vcc && vcc1 && out1 && vcc2 && out2;
 
@@ -415,7 +414,7 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 		msg.AppendStr("VCC FAILED ", &msg);
 		msg.AppendFloat(VCC_ADC, &msg);
 	}
-	FSM01M1_USART_vCOM_FlushWriteLine(&msg);
+	FSM01M1_USART_vCOM_WriteLineFlush(&msg);
 
 	// Test VCC1
 	if (vcc1) {
@@ -426,7 +425,7 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 		msg.AppendStr("VCC1 FAILED ", &msg);
 		msg.AppendFloat(VCC1_ADC, &msg);
 	}
-	FSM01M1_USART_vCOM_FlushWriteLine(&msg);
+	FSM01M1_USART_vCOM_WriteLineFlush(&msg);
 
 	// Test OUT1
 	if (out1) {
@@ -437,7 +436,7 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 		msg.AppendStr("OUT1 FAILED ", &msg);
 		msg.AppendFloat(OUT1_ADC, &msg);
 	}
-	FSM01M1_USART_vCOM_FlushWriteLine(&msg);
+	FSM01M1_USART_vCOM_WriteLineFlush(&msg);
 
 	// Test VCC2
 	if (vcc2) {
@@ -448,7 +447,7 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 		msg.AppendStr("VCC2 FAILED ", &msg);
 		msg.AppendFloat(VCC2_ADC, &msg);
 	}
-	FSM01M1_USART_vCOM_FlushWriteLine(&msg);
+	FSM01M1_USART_vCOM_WriteLineFlush(&msg);
 
 	// Test OUT2
 	if (out2) {
@@ -459,7 +458,7 @@ void FSM01M1_TEST_CASE_expected_voltages_test(bool vcc, bool vcc1, bool out1, bo
 		msg.AppendStr("OUT2 FAILED ", &msg);
 		msg.AppendFloat(OUT2_ADC, &msg);
 	}
-	FSM01M1_USART_vCOM_FlushWriteLine(&msg);
+	FSM01M1_USART_vCOM_WriteLineFlush(&msg);
 
 	if (!result) {
 		FSM01M1_user_LED_red_ON();

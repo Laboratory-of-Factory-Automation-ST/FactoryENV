@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -70,12 +70,12 @@ void NUCLEO_USART_AppendStr(USART_MessageTypeDef * self, char * str);
 void NUCLEO_USART_Reset(USART_MessageTypeDef * self);
 HAL_StatusTypeDef NUCLEO_USART_ClearScreen();
 HAL_StatusTypeDef NUCLEO_USART_Write(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_FlushWrite(USART_MessageTypeDef * msg);
-HAL_StatusTypeDef NUCLEO_USART_WriteChar(char c);
+HAL_StatusTypeDef NUCLEO_USART_WriteFlush(USART_MessageTypeDef * msg);
 HAL_StatusTypeDef NUCLEO_USART_WriteLine(USART_MessageTypeDef * msg);
+HAL_StatusTypeDef NUCLEO_USART_WriteLineFlush(USART_MessageTypeDef * msg);
+HAL_StatusTypeDef NUCLEO_USART_WriteChar(char c);
 HAL_StatusTypeDef NUCLEO_USART_WriteString(char *str);
 HAL_StatusTypeDef NUCLEO_USART_WriteStringLine(char *str);
-HAL_StatusTypeDef NUCLEO_USART_Status();
 HAL_StatusTypeDef NUCLEO_USART_ReadLine(USART_MessageTypeDef * msg);
 
 #ifdef	 __cplusplus

@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_legacy_driver.c
+  * @file    fsm01m1_base_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for programmable board control and measurement
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -18,9 +18,10 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include "../../FSM01M1/Inc/fsm01m1_pulse_driver.h"
-#include <fsm01m1_driver.h>
-#include <fsm01m1_pulse_driver.h>
+#include "fsm01m1_base_driver.h"
+#include "fsm01m1_driver.h"
+#include "fsm01m1_pulse_driver.h"
+//#include "../../FSM01M1/Inc/fsm01m1_pulse_driver.h"
 
 /* Private variables ---------------------------------------------------------*/
 extern SPI_HandleTypeDef hspi2;

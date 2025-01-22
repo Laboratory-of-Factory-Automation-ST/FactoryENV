@@ -7,7 +7,7 @@
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -18,12 +18,13 @@
   */
 
 /* Includes ------------------------------------------------------------------*/
-#include <fsm01m1_driver.h>
-#include <fsm01m1_pulse_driver.h>
 #include <stdlib.h>
 #include <string.h>
-
-#include "../../NUCLEO/inc/nucleo_usart_driver.h"
+#include "fsm01m1_driver.h"
+#include "fsm01m1_base_driver.h"
+#include "fsm01m1_pulse_driver.h"
+#include "nucleo_usart_driver.h"
+//#include "../../NUCLEO/inc/nucleo_usart_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/
 typedef enum CTRL_IO_t {

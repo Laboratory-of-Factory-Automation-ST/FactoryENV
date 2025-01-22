@@ -24,11 +24,7 @@
 #include "nucleo_usart_driver.h"
 
 /* Private constants ---------------------------------------------------------*/
-
-
 /* Exported variables --------------------------------------------------------*/
-
-
 /* Exported functions --------------------------------------------------------*/
 
 /**
@@ -125,6 +121,47 @@ HAL_StatusTypeDef NUCLEO_USART_WriteLine(USART_MessageTypeDef * msg) {
 	strncat(msg_ln, "\n", USART_EOL_LEN);
 
 	HAL_StatusTypeDef status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg_ln, (USART_MSG_MAX_LEN + USART_EOL_LEN), USART_COM_TIMEOUT);
+	return status;
+}
+
+/**
+ * @brief Write message to USART and flush its data content
+ * @param msg: message
+ * @retval HAL_StatusTypeDef
+ */
+HAL_StatusTypeDef NUCLEO_USART_WriteFlush(USART_MessageTypeDef * msg) {
+
+	HAL_StatusTypeDef status = HAL_OK;
+
+	status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg->data, USART_MSG_MAX_LEN, USART_COM_TIMEOUT);
+	msg->Reset(msg);
+
+	return status;
+}
+
+/**
+ * @brief Flush and write newline terminated message to virtual COM port stream
+ * @param msg: message
+ * @retval HAL_StatusTypeDef
+ */
+HAL_StatusTypeDef NUCLEO_USART_WriteLineFlush(USART_MessageTypeDef * msg) {
+
+	HAL_StatusTypeDef status = HAL_OK;
+	char msg_ln[USART_MSG_MAX_LEN + USART_EOL_LEN];
+
+	/* TODO check if this 'if' is needed whatsoever */
+	if (msg->flag == wait) {
+		msg->flag = flush_write;
+		/* TODO Problematic: flag goes to flush_write, but nothing is transmitted */
+		return HAL_BUSY;
+	}
+
+	memcpy(msg_ln, msg->data, USART_MSG_MAX_LEN);
+	strncat(msg_ln, "\n", USART_EOL_LEN);
+
+	status = HAL_UART_Transmit(uart_handle, (uint8_t *) msg_ln, USART_MSG_MAX_LEN, USART_COM_TIMEOUT);
+	msg->Reset(msg);
+
 	return status;
 }
 
