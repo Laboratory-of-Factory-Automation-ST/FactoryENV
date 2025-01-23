@@ -5,11 +5,11 @@
  *      Author: marek novotny
  */
 
-#ifndef DRIVERS_BSP_FSM01M1_EVAL_INC_FSM01M1_PIN_MAP_H_
-#define DRIVERS_BSP_FSM01M1_EVAL_INC_FSM01M1_PIN_MAP_H_
+#ifndef __FSM01M1_PIN_MAP_H
+#define __FSM01M1_PIN_MAP_H
 
 /* Exported constants --------------------------------------------------------*/
 // TODO: pin map defines
 
 
-#endif /* DRIVERS_BSP_FSM01M1_EVAL_INC_FSM01M1_PIN_MAP_H_ */
+#endif /* __FSM01M1_PIN_MAP_H */

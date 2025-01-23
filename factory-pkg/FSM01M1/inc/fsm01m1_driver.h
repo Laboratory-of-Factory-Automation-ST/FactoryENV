@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_eval_diagnostic_driver.h
+  * @file    fsm01m1_driver.h
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for interactive board control and measurement
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -18,8 +18,8 @@
   */
 
 /* Define to prevent recursive inclusion -------------------------------------*/
-#ifndef BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_DIAGNOSTIC_DRIVER_H_
-#define BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_DIAGNOSTIC_DRIVER_H_
+#ifndef __FSM01M1_DRIVER_H
+#define __FSM01M1_DRIVER_H
 
 #ifdef __cplusplus
 extern "C" {
@@ -40,4 +40,4 @@ void FSM01M1_CTRL_Handle(USART_MessageTypeDef * msg);
 }
 #endif
 
-#endif /* BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_DIAGNOSTIC_DRIVER_H_ */
+#endif /* __FSM01M1_DRIVER_H */

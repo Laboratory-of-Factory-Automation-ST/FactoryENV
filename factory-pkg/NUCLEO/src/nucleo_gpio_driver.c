@@ -5,8 +5,8 @@
  *      Author: marek novotny
  */
 #include <inttypes.h>
+#include <stest01a1_driver.h>
 #include "nucleo_gpio_driver.h"
-#include "stest01a1_control_driver.h"
 
 GPIO_TypeDef * NUCLEO_GPIO_GetPortHandle(char * GPIO_HandleString) {
 	char port_handle_str = GPIO_HandleString[1];

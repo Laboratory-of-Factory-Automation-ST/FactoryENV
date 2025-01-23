@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    fsm01m1_eval_pulse_driver.h
+  * @file    fsm01m1_pulse_driver.h
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for programmable pulse generation
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -17,8 +17,8 @@
   ******************************************************************************
   */
 
-#ifndef BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_PULSE_DRIVER_H_
-#define BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_PULSE_DRIVER_H_
+#ifndef __FSM01M1_PULSE_DRIVER_H
+#define __FSM01M1_PULSE_DRIVER_H
 
 #include "../../NUCLEO/inc/nucleo_tim_driver.h"
 //#include "main.h"
@@ -50,4 +50,4 @@ void FSM01M1_PULSE_PulseGen_TIM_IT(TIM_HandleTypeDef * handle, TIM_TypeDef * tmr
 void FSM01M1_PULSE_PulseFinishedCallback(TIM_HandleTypeDef *htim);
 void FSM01M1_PULSE_PeriodElapsedCallback(TIM_HandleTypeDef *htim);
 
-#endif /* BSP_FSM01M1_EVAL_INC_FSM01M1_EVAL_PULSE_DRIVER_H_ */
+#endif /* __FSM01M1_PULSE_DRIVER_H */

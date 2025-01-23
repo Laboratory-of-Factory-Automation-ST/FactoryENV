@@ -1,13 +1,13 @@
 /**
   ******************************************************************************
-  * @file    stest01a1_eval_control_driver.c
+  * @file    stest01a1_driver.c
   * @author  ST Power Application Laboratory
   * @version V1.0.0
   * @brief   Provides functions for interactive board control and measurement
   ******************************************************************************
   * @attention
   *
-  * Copyright (c) 2023 STMicroelectronics.
+  * Copyright (c) 2025 STMicroelectronics.
   * All rights reserved.
   *
   * This software is licensed under terms that can be found in the LICENSE file
@@ -21,10 +21,10 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include "stest01a1_control_driver.h"
+#include "stest01a1_driver.h"
+#include "stest01a1_mapping.h"
 #include "nucleo_tim_driver.h"
 #include "nucleo_usart_driver.h"
-#include "stest01a1_mapping.h"
 #include "nucleo_gpio_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -130,8 +130,8 @@ void STEST01A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
 	else if (strcmp(arg, "actions") == 0) STEST01A1_CTRL_list_actions();
 	else {
 		msg.Reset(&msg);
-		msg.AppendStr("Invalid command, no actions performed", &msg);
-		NUCLEO_USART_vCOM_WriteLine(&msg);
+		msg.AppendStr(&msg, "Invalid command, no actions performed");
+		NUCLEO_USART_WriteLine(&msg);
 	}
 }
 
@@ -143,13 +143,13 @@ void STEST01A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
  */
 void STEST01A1_CTRL_help() {
 	msg.Reset(&msg);
-	msg.AppendStr("[function] [action] - applies action to a function\n"
+	msg.AppendStr(&msg, "[function] [action] - applies action to a function\n"
 			"[global_action] - applies action to all functions\n"
 			"- Type 'functions' for function list\n"
 			"- Type 'actions' for action list\n"
 			"- Type 'clear' to clear text from terminal\n"
-			/*"- Use 'x' in device identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/, &msg);
-	NUCLEO_USART_vCOM_Write(&msg);
+			/*"- Use 'x' in device identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -162,20 +162,20 @@ void STEST01A1_CTRL_list_devices() {
 	for (int i = out; i <= flt2; i += 1) {
 		switch (i) {
 			case out:
-				msg.AppendStr("out\n", &msg);
+				msg.AppendStr(&msg, "out\n");
 				break;
 			case flt1:
-				msg.AppendStr("flt1\n", &msg);
+				msg.AppendStr(&msg, "flt1\n");
 				break;
 			case flt2:
-				msg.AppendStr("flt2\n", &msg);
+				msg.AppendStr(&msg, "flt2\n");
 				break;
 			default:
 				break;
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -188,31 +188,31 @@ void STEST01A1_CTRL_list_actions() {
 	for (int i = on; i <= levels; i += 1) {
 		switch (i) {
 			case on:
-				msg.AppendStr("on\n", &msg);
+				msg.AppendStr(&msg, "on\n");
 				break;
 			case off:
-				msg.AppendStr("off\n", &msg);
-				msg.AppendStr("off [global]\n", &msg);
+				msg.AppendStr(&msg, "off\n");
+				msg.AppendStr(&msg, "off [global]\n");
 				break;
 			case state:
-				msg.AppendStr("state - returns if function is on or off\n", &msg);
+				msg.AppendStr(&msg, "state - returns if function is on or off\n");
 				break;
 			case states:
-				msg.AppendStr("states [global]\n", &msg);
+				msg.AppendStr(&msg, "states [global]\n");
 				break;
 			case level:
-				msg.AppendStr("level - returns numeric representation of function state"
-						"(integer 1 and 0 denote logical state, decimals denote physical state)\n", &msg);
+				msg.AppendStr(&msg, "level - returns numeric representation of function state"
+						"(integer 1 and 0 denote logical state, decimals denote physical state)\n");
 				break;
 			case levels:
-				msg.AppendStr("levels [global]\n", &msg);
+				msg.AppendStr(&msg, "levels [global]\n");
 				break;
 			default:
 				break;
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -271,7 +271,7 @@ void STEST01A1_CTRL_PWM_Config(char * cfg) {
 	uint32_t pulse_ticks = atoi(pulse);
 
 	if (pulse_ticks > period_ticks) {
-		NUCLEO_USART_vCOM_QuickWriteLine("Pulse cannot have longer duration than period");
+		NUCLEO_USART_WriteStringLine("Pulse cannot have longer duration than period");
 		return;
 	}
 
@@ -319,34 +319,34 @@ void STEST01A1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt) {
 	switch (dev) {
 		case out:
 			logic = (int) HAL_GPIO_ReadPin(STEST01A1_IN_GPIO_Port, STEST01A1_IN_GPIO_Pin);
-			msg.AppendStr("OUT \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT \t\t = ");
 			break;
 		case flt1:
 			logic = (int) STEST01A1_FLT1;
 			STEST01A1_FLT1 = 0;
-			msg.AppendStr("FLT1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "FLT1 \t\t = ");
 			break;
 		case flt2:
 			logic = (int) STEST01A1_FLT2;
 			STEST01A1_FLT2 = 0;
-			msg.AppendStr("FLT2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "FLT2 \t\t = ");
 			break;
 		default:
 			break;
 	}
 
 	if (fmt == numerical) {
-		if (reading != -1.0f) msg.AppendFloat(reading, &msg);
-		else if (logic != -1) msg.AppendInt(logic, &msg);
+		if (reading != -1.0f) msg.AppendFloat(&msg, reading);
+		else if (logic != -1) msg.AppendInt(&msg, logic);
 	}
 	else if (fmt == logical) {
-		if (reading >= NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr("(on)", &msg);
-		else if (reading <= NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr("(off)", &msg);
-		else msg.AppendStr("(?)", &msg);
+		if (reading >= NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr(&msg, "(on)");
+		else if (reading <= NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr(&msg, "(off)");
+		else msg.AppendStr(&msg, "(?)");
 	}
 
-	msg.AppendStr("\n", &msg);
-	NUCLEO_USART_vCOM_Write(&msg);
+	msg.AppendStr(&msg, "\n");
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -361,13 +361,13 @@ void STEST01A1_CTRL_demag_stat() {
 
 	uint32_t inductance = elapsed_time * r / log((v_demag + v_init) / v_demag);
 
-	msg.AppendStr("Demagnetization duration: ", &msg);
-	msg.AppendFloat(elapsed_time * 1000, &msg);
-	msg.AppendStr(" ms, ", &msg);
-	msg.AppendStr("Inductance: ", &msg);
-	msg.AppendFloat(inductance, &msg);
-	msg.AppendStr(" H", &msg);
-	NUCLEO_USART_vCOM_WriteLine(&msg);
+	msg.AppendStr(&msg, "Demagnetization duration: ");
+	msg.AppendFloat(&msg, elapsed_time * 1000);
+	msg.AppendStr(&msg, " ms, ");
+	msg.AppendStr(&msg, "Inductance: ");
+	msg.AppendFloat(&msg, inductance);
+	msg.AppendStr(&msg, " H");
+	NUCLEO_USART_WriteLine(&msg);
 	msg.Reset(&msg);
 	DEMAG_TICKS = 0;
 }

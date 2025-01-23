@@ -1,6 +1,6 @@
 /**
   ******************************************************************************
-  * @file    do41a1_control_driver.c
+  * @file    do41a1_driver.c
   * @brief   This file implements interfaces for control of
   *			 X-NUCLEO-DO41A1 board.
   ******************************************************************************
@@ -20,9 +20,9 @@
 #include <string.h>
 #include <math.h>
 #include <stdlib.h>
-#include "do41a1_control_driver.h"
-#include "nucleo_tim_driver.h"
+#include "do41a1_driver.h"
 #include "do41a1_mapping.h"
+#include "nucleo_tim_driver.h"
 #include "nucleo_gpio_driver.h"
 
 /* Private typedef -----------------------------------------------------------*/
@@ -166,8 +166,8 @@ void DO41A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
 	else if (strcmp(arg, "actions") == 0) DO41A1_CTRL_list_actions();
 	else {
 		msg.Reset(&msg);
-		msg.AppendStr("Invalid command, no actions performed", &msg);
-		NUCLEO_USART_vCOM_WriteLine(&msg);
+		msg.AppendStr(&msg, "Invalid command, no actions performed");
+		NUCLEO_USART_WriteLine(&msg);
 	}
 }
 
@@ -179,13 +179,13 @@ void DO41A1_CTRL_resolve(char * cmd, CTRL_IOTypeDef target) {
  */
 void DO41A1_CTRL_help() {
 	msg.Reset(&msg);
-	msg.AppendStr("[function] [action] - applies action to a function\n"
+	msg.AppendStr(&msg, "[function] [action] - applies action to a function\n"
 			"[global_action] - applies action to all functions\n"
 			"- Type 'functions' for function list\n"
 			"- Type 'actions' for action list\n"
 			"- Type 'clear' to clear text from terminal\n"
-			/*"- Use 'x' in io identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/, &msg);
-	NUCLEO_USART_vCOM_Write(&msg);
+			/*"- Use 'x' in io identifiers for numerical wildcard (e.g. outx selects all outputs)\n"*/);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -198,35 +198,35 @@ void DO41A1_CTRL_list_io() {
 	for (int i = out1; i <= status4; i += 1) {
 		switch (i) {
 			case out1:
-				msg.AppendStr("out1\n", &msg);
+				msg.AppendStr(&msg, "out1\n");
 				break;
 			case out2:
-				msg.AppendStr("out2\n", &msg);
+				msg.AppendStr(&msg, "out2\n");
 				break;
 			case out3:
-				msg.AppendStr("out3\n", &msg);
+				msg.AppendStr(&msg, "out3\n");
 				break;
 			case out4:
-				msg.AppendStr("out4\n", &msg);
+				msg.AppendStr(&msg, "out4\n");
 				break;
 			case status1:
-				msg.AppendStr("status1\n", &msg);
+				msg.AppendStr(&msg, "status1\n");
 				break;
 			case status2:
-				msg.AppendStr("status2\n", &msg);
+				msg.AppendStr(&msg, "status2\n");
 				break;
 			case status3:
-				msg.AppendStr("status3\n", &msg);
+				msg.AppendStr(&msg, "status3\n");
 				break;
 			case status4:
-				msg.AppendStr("status4\n", &msg);
+				msg.AppendStr(&msg, "status4\n");
 				break;
 			default:
 				break;
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -239,31 +239,31 @@ void DO41A1_CTRL_list_actions() {
 	for (int i = on; i <= levels; i += 1) {
 		switch (i) {
 			case on:
-				msg.AppendStr("on\n", &msg);
+				msg.AppendStr(&msg, "on\n");
 				break;
 			case off:
-				msg.AppendStr("off\n", &msg);
-				msg.AppendStr("off [global]\n", &msg);
+				msg.AppendStr(&msg, "off\n");
+				msg.AppendStr(&msg, "off [global]\n");
 				break;
 			case state:
-				msg.AppendStr("state - returns if function is on or off\n", &msg);
+				msg.AppendStr(&msg, "state - returns if function is on or off\n");
 				break;
 			case states:
-				msg.AppendStr("states [global]\n", &msg);
+				msg.AppendStr(&msg, "states [global]\n");
 				break;
 			case level:
-				msg.AppendStr("level - returns numeric representation of function state"
-						"(integer 1 and 0 denote logical state, decimals denote physical state)\n", &msg);
+				msg.AppendStr(&msg, "level - returns numeric representation of function state"
+						"(integer 1 and 0 denote logical state, decimals denote physical state)\n");
 				break;
 			case levels:
-				msg.AppendStr("levels [global]\n", &msg);
+				msg.AppendStr(&msg, "levels [global]\n");
 				break;
 			default:
 				break;
 		}
 	}
 
-	NUCLEO_USART_vCOM_Write(&msg);
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
@@ -296,7 +296,7 @@ void DO41A1_CTRL_periodic_pulse(CTRL_IOTypeDef io) {
 	uint32_t pulse_ticks = atoi(pulse);
 
 	if (pulse_ticks > period_ticks) {
-		NUCLEO_USART_vCOM_QuickWriteLine("Pulse cannot have longer duration than period");
+		NUCLEO_USART_WriteStringLine("Pulse cannot have longer duration than period");
 		return;
 	}
 
@@ -339,56 +339,56 @@ void DO41A1_CTRL_read(CTRL_IOTypeDef dev, CTRL_FormatTypeDef fmt) {
 	switch (dev) {
 		case out1:
 			logic = (int) HAL_GPIO_ReadPin(DO41A1_IN1_GPIO_Port, DO41A1_IN1_GPIO_Pin);
-			msg.AppendStr("OUT1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT1 \t\t = ");
 			break;
 		case out2:
 			logic = (int) HAL_GPIO_ReadPin(DO41A1_IN2_GPIO_Port, DO41A1_IN2_GPIO_Pin);
-			msg.AppendStr("OUT2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT2 \t\t = ");
 			break;
 		case out3:
 			logic = (int) HAL_GPIO_ReadPin(DO41A1_IN3_GPIO_Port, DO41A1_IN3_GPIO_Pin);
-			msg.AppendStr("OUT3 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT3 \t\t = ");
 			break;
 		case out4:
 			logic = (int) HAL_GPIO_ReadPin(DO41A1_IN4_GPIO_Port, DO41A1_IN4_GPIO_Pin);
-			msg.AppendStr("OUT4 \t\t = ", &msg);
+			msg.AppendStr(&msg, "OUT4 \t\t = ");
 			break;
 		case status1:
 			logic = (int) DO41A1_STATUS1;
 			DO41A1_STATUS1 = 0;
-			msg.AppendStr("STATUS1 \t\t = ", &msg);
+			msg.AppendStr(&msg, "STATUS1 \t\t = ");
 			break;
 		case status2:
 			logic = (int) DO41A1_STATUS2;
 			DO41A1_STATUS2 = 0;
-			msg.AppendStr("STATUS2 \t\t = ", &msg);
+			msg.AppendStr(&msg, "STATUS2 \t\t = ");
 			break;
 		case status3:
 			logic = (int) DO41A1_STATUS3;
 			DO41A1_STATUS3 = 0;
-			msg.AppendStr("STATUS3 \t\t = ", &msg);
+			msg.AppendStr(&msg, "STATUS3 \t\t = ");
 			break;
 		case status4:
 			logic = (int) DO41A1_STATUS4;
 			DO41A1_STATUS4 = 0;
-			msg.AppendStr("STATUS4 \t\t = ", &msg);
+			msg.AppendStr(&msg, "STATUS4 \t\t = ");
 			break;
 		default:
 			break;
 	}
 
 	if (fmt == numerical) {
-		if (reading != -1.0f) msg.AppendFloat(reading, &msg);
-		else if (logic != -1) msg.AppendInt(logic, &msg);
+		if (reading != -1.0f) msg.AppendFloat(&msg, reading);
+		else if (logic != -1) msg.AppendInt(&msg, logic);
 	}
 	else if (fmt == logical) {
-		if (reading >= NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr("(on)", &msg);
-		else if (reading <= NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr("(off)", &msg);
-		else msg.AppendStr("(?)", &msg);
+		if (reading >= NUCLEO_GPIO_NOMINAL_VOLTAGE_THRESHOLD || logic == 1) msg.AppendStr(&msg, "(on)");
+		else if (reading <= NUCLEO_GPIO_ZERO_VOLTAGE_THRESHOLD || logic == 0) msg.AppendStr(&msg, "(off)");
+		else msg.AppendStr(&msg, "(?)");
 	}
 
-	msg.AppendStr("\n", &msg);
-	NUCLEO_USART_vCOM_Write(&msg);
+	msg.AppendStr(&msg, "\n");
+	NUCLEO_USART_Write(&msg);
 }
 
 /**
